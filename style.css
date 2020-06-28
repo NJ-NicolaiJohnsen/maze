@@ -1,6 +1,6 @@
 .player, .goal {
-    width: 20px;
-    height: 20px;
+    width: 19px;
+    height: 19px;
     display: inline-block;
     position: absolute;
     display: block;
@@ -8,7 +8,7 @@
 
 .player {
     background: red;
-   
+    z-index: 100;
 }
 
 .goal {
@@ -20,6 +20,7 @@
     width: 400px;
     height: 400px;
     background: burlywood;
+    border: 20px solid black;
 }
 
 .wall {
