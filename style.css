@@ -1,0 +1,36 @@
+.player, .goal {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    position: absolute;
+    display: block;
+}
+
+.player {
+    background: red;
+   
+}
+
+.goal {
+    background: blue;
+}
+
+.maze {
+    width: 400px;
+    height: 400px;
+    background: burlywood;
+}
+
+.wall {
+    width: 18px;
+    height: 18px;
+    margin: 1px;
+    background: green;
+    display: inline-block;
+    line-height: 0;
+    line-break: strict;
+}
+
+.initial-wall {
+    display: none;
+}
