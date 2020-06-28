@@ -61,3 +61,49 @@ let isEqual = function (value, other) {
 }
 
 console.log(Object.prototype.toString.call(arr2));
+let player = document.querySelector('.player');
+let goal = document.querySelector('.goal');
+let coordinates = {
+    x: 0,
+    y: 0
+};
+console.log(coordinates);
+
+// left arrowkey === 37
+// right arrowkey === 39
+// up arrowkey === 38
+// down arrowkey === 40
+document.addEventListener('keyup', function(event){
+    
+    
+   
+
+
+    if (event.keyCode === 39) { //right
+        coordinates.x+= 20;
+        if (coordinates.x > 381){coordinates.x = 0};
+        player.style.transform =  'translate('+coordinates.x+'px,'+coordinates.y+'px)';
+    }
+
+    if (event.keyCode === 37) { //left
+        coordinates.x-= 20;
+        if (coordinates.x < -1){coordinates.x = 380};
+        player.style.transform =  'translate('+coordinates.x+'px,'+coordinates.y+'px)';
+    }
+
+    if (event.keyCode === 38) { //up
+        coordinates.y-= 20;
+        if (coordinates.y < -1){coordinates.y = 380};
+        player.style.transform =  'translate('+coordinates.x+'px,'+coordinates.y+'px)';
+    }
+
+    if (event.keyCode === 40) { //down
+        coordinates.y+= 20;
+        
+        if (coordinates.y > 381){coordinates.y = 0};
+        player.style.transform =  'translate('+coordinates.x+'px,'+coordinates.y+'px)';
+    }
+
+    console.log(coordinates.x, coordinates.y)
+
+})

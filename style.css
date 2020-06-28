@@ -13,6 +13,7 @@
 
 .goal {
     background: blue;
+    transform: translate(380px, 380px);
 }
 
 .maze {
