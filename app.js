@@ -1,12 +1,34 @@
 let x = 0;
 let y = 0;
 
-for (i=1; i<20; i+1){
-    x+=i;
-   
+function createMaze(size){
+    let walls = [];
+    let wall = document.querySelector('.wall');
+    let maze = document.querySelector('.maze');
+
+
+    for (i=0; i<size/2; i++){
+        walls.push(wall.cloneNode());
+        
+    }
+
+    walls.forEach(wall=>{
+        wall.style.display = 'block';
+        maze.appendChild(wall)
+    })
+
+    for (i=0; i<size/2; i++){
+        x+=40;
+        if (x > 381){
+            x=0, y+=20
+        }
+
+    }
+    
 }
 
-console.log(x);
+createMaze(400)
+
 
 
 
