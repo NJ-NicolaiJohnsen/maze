@@ -1,5 +1,4 @@
-let x = 0;
-let y = 0;
+
 
 function createMaze(size){
     let walls = [];
@@ -7,7 +6,7 @@ function createMaze(size){
     let maze = document.querySelector('.maze');
 
 
-    for (i=0; i<size/2; i++){
+    for (i=0; i<size/4; i++){
         walls.push(wall.cloneNode());
         
     }
@@ -17,19 +16,35 @@ function createMaze(size){
         maze.appendChild(wall)
     })
 
-    for (i=0; i<size/2; i++){
-        x+=40;
-        if (x > 381){
-            x=0, y+=20
-        }
-
-    }
+  return walls;
     
 }
 
-createMaze(400)
 
 
+function createWalls(){
+    let walls = createMaze(400);
+    let x = 0;
+    let y = 20;
+    
+    walls.forEach(wall=>{
+
+        wall.style.left = x+'px';
+        wall.style.top = y+'px';
+
+        x+=40;
+        
+        if (x > 361) {
+            x = 0;
+            y+=40
+        }
+        
+    })
+
+    //console.log(walls)
+
+}
+createWalls()
 
 
 

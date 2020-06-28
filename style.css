@@ -3,12 +3,13 @@
     height: 19px;
     display: inline-block;
     position: absolute;
-    display: block;
+    display: none;
 }
 
 .player {
     background: red;
     z-index: 100;
+
 }
 
 .goal {
@@ -21,6 +22,7 @@
     height: 400px;
     background: burlywood;
     border: 20px solid black;
+    position: relative;
 }
 
 .wall {
@@ -31,6 +33,7 @@
     display: inline-block;
     line-height: 0;
     line-break: strict;
+    position: absolute;
 }
 
 .initial-wall {
