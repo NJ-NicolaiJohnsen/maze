@@ -3,7 +3,7 @@
     height: 19px;
     display: inline-block;
     position: absolute;
-    display: none;
+    display: block;
 }
 
 .player {

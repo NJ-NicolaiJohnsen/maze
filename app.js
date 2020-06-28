@@ -24,7 +24,7 @@ function createMaze(size){
 
 function createWalls(){
     let walls = createMaze(400);
-    let x = 0;
+    let x = 20;
     let y = 20;
     
     walls.forEach(wall=>{
@@ -34,17 +34,45 @@ function createWalls(){
 
         x+=40;
         
-        if (x > 361) {
-            x = 0;
+        if (x > 380) {
+            x = 20;
             y+=40
         }
         
     })
 
-    //console.log(walls)
+    return walls;
 
 }
-createWalls()
+
+
+
+function doSomething(){
+    let walls = createWalls()
+    clonedNodeArray = [];
+    walls.forEach(wall=>{
+        clonedNodeArray.push(wall.cloneNode());
+    })
+
+    for (i=0; i< walls.length; i++){
+        walls[i].appendChild(clonedNodeArray[i]);
+        clonedNodeArray[i].style.top = '0px';
+        clonedNodeArray[i].style.left = '0px'
+        clonedNodeArray[i].style.position = 'relative';
+        if (Math.random()*2>1){
+            clonedNodeArray[i].style.top = '-20px';
+        } else {
+            clonedNodeArray[i].style.left = '-20px'
+        }
+        
+       
+        //clonedNodeArray[i].style.display = 'none';
+    }
+
+    
+
+}
+doSomething()
 
 
 
@@ -74,8 +102,6 @@ createWalls()
 
 
 
-
-/*
 let player = document.querySelector('.player');
 let goal = document.querySelector('.goal');
 let coordinates = {
@@ -149,4 +175,3 @@ function walltest(){
 }
 walltest()
 
-*/
