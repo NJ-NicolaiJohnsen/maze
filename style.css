@@ -18,8 +18,8 @@
 }
 
 .maze {
-    width: 400px;
-    height: 400px;
+    width: 1640px;
+    height: 880px;
     background: burlywood;
     border: 20px solid black;
     position: relative;
@@ -37,5 +37,9 @@
 }
 
 .initial-wall {
+    display: none;
+}
+
+#myCanvas {
     display: none;
 }

@@ -23,7 +23,7 @@ function createMaze(size){
 
 
 function createWalls(){
-    let walls = createMaze(400);
+    let walls = createMaze(3600);
     let x = 20;
     let y = 20;
     
@@ -34,7 +34,7 @@ function createWalls(){
 
         x+=40;
         
-        if (x > 380) {
+        if (x > 1620) {
             x = 20;
             y+=40
         }
@@ -47,7 +47,7 @@ function createWalls(){
 
 
 
-function doSomething(){
+function binaryMaze(){
     let walls = createWalls()
     clonedNodeArray = [];
     walls.forEach(wall=>{
@@ -59,10 +59,15 @@ function doSomething(){
         clonedNodeArray[i].style.top = '0px';
         clonedNodeArray[i].style.left = '0px'
         clonedNodeArray[i].style.position = 'relative';
-        if (Math.random()*2>1){
+        let randomInt = Math.random()*3;
+        if (randomInt<0.8){
             clonedNodeArray[i].style.top = '-20px';
+        } else if (randomInt >= 0.8 && randomInt < 1.6) {
+            clonedNodeArray[i].style.top = '-20px';
+        } else if (randomInt >= 1.6 && randomInt < 2.4) {
+            clonedNodeArray[i].style.bottom = '-20px';
         } else {
-            clonedNodeArray[i].style.left = '-20px'
+            clonedNodeArray[i].style.bottom = '-20px'
         }
         
        
@@ -72,7 +77,7 @@ function doSomething(){
     
 
 }
-doSomething()
+binaryMaze()
 
 
 
@@ -114,34 +119,34 @@ console.log(coordinates);
 // right arrowkey === 39
 // up arrowkey === 38
 // down arrowkey === 40
-document.addEventListener('keyup', function(event){
+document.addEventListener('keydown', function(event){
     
     
    
 
 
-    if (event.keyCode === 39) { //right
+    if (event.keyCode === 39 || event.keyCode === 68) { //right
         coordinates.x+= 20;
-        if (coordinates.x > 381){coordinates.x = 0};
+        if (coordinates.x > 1181){coordinates.x = 0};
         player.style.transform =  'translate('+coordinates.x+'px,'+coordinates.y+'px)';
     }
 
-    if (event.keyCode === 37) { //left
+    if (event.keyCode === 37 || event.keyCode === 65) { //left
         coordinates.x-= 20;
-        if (coordinates.x < -1){coordinates.x = 380};
+        if (coordinates.x < -1){coordinates.x = 1180};
         player.style.transform =  'translate('+coordinates.x+'px,'+coordinates.y+'px)';
     }
 
-    if (event.keyCode === 38) { //up
+    if (event.keyCode === 38 || event.keyCode === 87) { //up
         coordinates.y-= 20;
-        if (coordinates.y < -1){coordinates.y = 380};
+        if (coordinates.y < -1){coordinates.y = 1180};
         player.style.transform =  'translate('+coordinates.x+'px,'+coordinates.y+'px)';
     }
 
-    if (event.keyCode === 40) { //down
+    if (event.keyCode === 40 || event.keyCode === 83) { //down
         coordinates.y+= 20;
         
-        if (coordinates.y > 381){coordinates.y = 0};
+        if (coordinates.y > 1181){coordinates.y = 0};
         player.style.transform =  'translate('+coordinates.x+'px,'+coordinates.y+'px)';
     }
 
