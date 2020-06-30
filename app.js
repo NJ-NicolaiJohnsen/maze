@@ -1,3 +1,12 @@
+let player = document.querySelector('.player');
+let goal = document.querySelector('.goal');
+let coordinates = {
+    x: 0,
+    y: 0
+};
+
+
+
 
 
 function createMaze(size){
@@ -22,8 +31,9 @@ function createMaze(size){
 
 
 
+
 function createWalls(){
-    let walls = createMaze(3600);
+    let walls = createMaze((900/20)*(900/20));
     let x = 20;
     let y = 20;
     
@@ -34,7 +44,7 @@ function createWalls(){
 
         x+=40;
         
-        if (x > 1620) {
+        if (x > 900) {
             x = 20;
             y+=40
         }
@@ -59,124 +69,96 @@ function binaryMaze(){
         clonedNodeArray[i].style.top = '0px';
         clonedNodeArray[i].style.left = '0px'
         clonedNodeArray[i].style.position = 'relative';
+
         let randomInt = Math.random()*3;
         if (randomInt<0.8){
             clonedNodeArray[i].style.top = '-20px';
         } else if (randomInt >= 0.8 && randomInt < 1.6) {
             clonedNodeArray[i].style.top = '-20px';
         } else if (randomInt >= 1.6 && randomInt < 2.4) {
-            clonedNodeArray[i].style.bottom = '-20px';
+            clonedNodeArray[i].style.left = '-20px';
         } else {
-            clonedNodeArray[i].style.bottom = '-20px'
+            clonedNodeArray[i].style.left = '-20px'
         }
+
+
         
-       
-        //clonedNodeArray[i].style.display = 'none';
+
     }
-
     
-
+  
 }
 binaryMaze()
 
 
+//console.log(isEqual(player, walls[i])); 
 
 
+/*        
+function isEqual(value, other) {
 
+    let type = Object.prototype.toString.call(value);
 
+    if (type !== Object.prototype.toString.call(other)){
+        return false
+    }
+       
+    return true
+}
+*/
 
+function collisionControl() {
+    let wallNodes = document.querySelectorAll('.wall');
+    wallNodes.forEach(node=>{
+       console.log(player.style.left)
+    })
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-let player = document.querySelector('.player');
-let goal = document.querySelector('.goal');
-let coordinates = {
-    x: 0,
-    y: 0
-};
-console.log(coordinates);
 
 // left arrowkey === 37
 // right arrowkey === 39
 // up arrowkey === 38
 // down arrowkey === 40
 document.addEventListener('keydown', function(event){
-    
-    
-   
 
+    console.log(collisionControl())
 
     if (event.keyCode === 39 || event.keyCode === 68) { //right
         coordinates.x+= 20;
-        if (coordinates.x > 1181){coordinates.x = 0};
-        player.style.transform =  'translate('+coordinates.x+'px,'+coordinates.y+'px)';
+        if (coordinates.x > 1621){coordinates.x = 0};
+        player.style.top =  coordinates.y + 'px';
+        player.style.left = coordinates.x + 'px';
     }
 
     if (event.keyCode === 37 || event.keyCode === 65) { //left
         coordinates.x-= 20;
-        if (coordinates.x < -1){coordinates.x = 1180};
-        player.style.transform =  'translate('+coordinates.x+'px,'+coordinates.y+'px)';
+        if (coordinates.x < -1){coordinates.x = 1620};
+        player.style.top =  coordinates.y + 'px';
+        player.style.left = coordinates.x + 'px';
     }
 
     if (event.keyCode === 38 || event.keyCode === 87) { //up
         coordinates.y-= 20;
-        if (coordinates.y < -1){coordinates.y = 1180};
-        player.style.transform =  'translate('+coordinates.x+'px,'+coordinates.y+'px)';
+        if (coordinates.y < -1){coordinates.y = 860};
+        player.style.top =  coordinates.y + 'px';
+        player.style.left = coordinates.x + 'px';
     }
 
     if (event.keyCode === 40 || event.keyCode === 83) { //down
         coordinates.y+= 20;
         
-        if (coordinates.y > 1181){coordinates.y = 0};
-        player.style.transform =  'translate('+coordinates.x+'px,'+coordinates.y+'px)';
+        if (coordinates.y > 861){coordinates.y = 0};
+        player.style.top =  coordinates.y + 'px';
+        player.style.left = coordinates.x + 'px';
     }
+
+
 
     console.log(coordinates.x, coordinates.y)
 
 })
 
 
-var c = document.getElementById('myCanvas');
-
-var ctx = c.getContext("2d");
-
-ctx.moveTo(10,0);
-ctx.lineTo(10, 10);
-ctx.stroke();
-
-abc = c.getContext('2d');
-abc.beginPath();
-abc.arc(45, 60, 30, 0, 2 * Math.PI); // x, y, radius, radians missing, 2 * PI = circle 
-abc.stroke();
 
 
-function walltest(){
-    let randomFoo = Math.random()*2;
-    
-    if (randomFoo < 1){
-        console.log('up')
-    } else {
-        console.log('left')
-    }
-}
-walltest()
 

@@ -18,8 +18,8 @@
 }
 
 .maze {
-    width: 1640px;
-    height: 880px;
+    width: 920px;
+    height: 900px;
     background: burlywood;
     border: 20px solid black;
     position: relative;
