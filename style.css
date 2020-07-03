@@ -1,3 +1,8 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
 .player, .goal {
     width: 19px;
     height: 19px;
@@ -43,9 +48,5 @@
 }
 
 .initial-wall {
-    display: none;
-}
-
-#myCanvas {
     display: none;
 }

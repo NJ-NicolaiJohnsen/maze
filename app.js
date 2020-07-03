@@ -12,7 +12,7 @@ let coordinates = {
 function createMaze(mazeArea){
     let wallDivs = [];
     let wallDiv = document.querySelector('.wall');
-    let maze = document.querySelector('.maze');
+   let maze = document.querySelector('.maze');
 
 
     for (i=0; i<mazeArea/4; i++){
@@ -92,20 +92,23 @@ function binaryMaze(){
   
 }
 binaryMaze()
+// https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Collision_detection
 
 function collisionControl() {// document.elementFromPoint !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //let wallNodes = document.querySelectorAll('.wall');
+   // let wallNodes = document.querySelectorAll('.wall');
     //let maze = document.querySelector('.maze');
-  //  let mazeClone = maze.cloneNode();
+    //let mazeClone = maze.cloneNode(true);
     //var shadow = mazeClone.attachShadow({mode: 'open'});
-    //var caretPosition = document.caretPositionFromPoint(180, 180);
-    //wallNodes.forEach(e=>{
-      //  shadow.appendChild(e)
-    //})
-    //document.appendChild(shadow)
-  //  console.log(shadow)
+    var elementPoint = document.elementFromPoint(180, 120);
+    let caret = document.caretPositionFromPoint(1000, 100)
+   // wallNodes.forEach(e=>{
+     //   shadow.appendChild(e)
+   // })
+    
+    console.log(caret)
 }
 collisionControl()
+
 
 // left arrowkey === 37
 // right arrowkey === 39
@@ -149,8 +152,6 @@ document.addEventListener('keydown', function(event){
     console.log(coordinates.x, coordinates.y)
 
 })
-
-
 
 
 
