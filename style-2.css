@@ -1,0 +1,67 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.player, .goal {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    position: absolute;
+    display: none;
+}
+
+.player {
+    background: red;
+    z-index: 100;
+}
+
+.goal {
+    background: blue;
+    transform: translate(380px, 380px);
+    z-index: 100;
+}
+
+
+.wallDiv {
+    width: 20px;
+    height: 20px;
+    background: green;
+    display: none;
+    float: left;
+    line-height: 0;
+    margin: 0;
+    transform: translate(0px, 0px);
+    z-index: 100;
+
+}
+
+.maze {
+   
+   width: 590px;
+   height: 570px; 
+
+    border: 10px solid black;
+    position: relative;
+    top: 100px;
+    left: 100px;
+   
+    z-index: 1;
+}
+
+
+.row {
+    height: 20px;
+    width: auto;
+    line-height: 200px;
+    
+}
+
+.column {
+    
+    float: left;
+    width: 20px;
+    height: 100%;
+    background: green;
+    
+}
