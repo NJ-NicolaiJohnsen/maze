@@ -9,20 +9,25 @@
 .player {
     background: red;
     z-index: 100;
-
 }
 
 .goal {
     background: blue;
     transform: translate(380px, 380px);
+    z-index: 100;
 }
 
 .maze {
-    width: 920px;
-    height: 900px;
+   
+    width: 820px;
+    height: 720px;
     background: burlywood;
     border: 20px solid black;
     position: relative;
+    top: 100px;
+    left: 100px;
+    overflow: hidden;
+    z-index: 1;
 }
 
 .wall {
@@ -34,6 +39,7 @@
     line-height: 0;
     line-break: strict;
     position: absolute;
+    z-index: 100;
 }
 
 .initial-wall {

@@ -9,56 +9,59 @@ let coordinates = {
 
 
 
-function createMaze(size){
-    let walls = [];
-    let wall = document.querySelector('.wall');
+function createMaze(mazeArea){
+    let wallDivs = [];
+    let wallDiv = document.querySelector('.wall');
     let maze = document.querySelector('.maze');
 
 
-    for (i=0; i<size/4; i++){
-        walls.push(wall.cloneNode());
-        
+    for (i=0; i<mazeArea/4; i++){
+        wallDivs.push(wallDiv.cloneNode());
     }
 
-    walls.forEach(wall=>{
-        wall.style.display = 'block';
-        maze.appendChild(wall)
+    wallDivs.forEach(wallDiv=>{
+        wallDiv.style.display = 'block';
+        maze.appendChild(wallDiv)
     })
 
-  return walls;
+  return wallDivs;
     
 }
 
 
 
 
-function createWalls(){
-    let walls = createMaze((900/20)*(900/20));
-    let x = 20;
-    let y = 20;
-    
-    walls.forEach(wall=>{
+function positionWallDivs(){
+    const width = 990;
+    const height = 820;
+    const mazeArea = (width/20) * (height/20);
+    let wallDivs = createMaze(mazeArea);
 
-        wall.style.left = x+'px';
-        wall.style.top = y+'px';
+    let xAxis = 20;
+    let yAxis = 20;
+    // Position each wallDiv uniformly every 40 pixels on along both axises
+    wallDivs.forEach(wallDiv=>{
+        // The wallDivs are absolutely positioned; with css
+        wallDiv.style.left = xAxis+'px';
+        wallDiv.style.top = yAxis+'px';
 
-        x+=40;
+        xAxis+=40;
         
-        if (x > 900) {
-            x = 20;
-            y+=40
+        if (xAxis > 900) {
+            xAxis = 20;
+            yAxis+=40
         }
         
     })
 
-    return walls;
+    return wallDivs;
 
 }
 
 
 
 function binaryMaze(){
-    let walls = createWalls()
+    let walls = positionWallDivs();
     clonedNodeArray = [];
     walls.forEach(wall=>{
         clonedNodeArray.push(wall.cloneNode());
@@ -71,14 +74,14 @@ function binaryMaze(){
         clonedNodeArray[i].style.position = 'relative';
 
         let randomInt = Math.random()*3;
-        if (randomInt<0.8){
+        if (randomInt<1.3){
             clonedNodeArray[i].style.top = '-20px';
-        } else if (randomInt >= 0.8 && randomInt < 1.6) {
-            clonedNodeArray[i].style.top = '-20px';
-        } else if (randomInt >= 1.6 && randomInt < 2.4) {
+        } else if (randomInt >= 1.3 && randomInt < 1.5) {
+            clonedNodeArray[i].style.top = '20px';
+        } else if (randomInt >= 1.5 && randomInt < 2.8) {
             clonedNodeArray[i].style.left = '-20px';
         } else {
-            clonedNodeArray[i].style.left = '-20px'
+            clonedNodeArray[i].style.left = '20px'
         }
 
 
@@ -90,30 +93,19 @@ function binaryMaze(){
 }
 binaryMaze()
 
-
-//console.log(isEqual(player, walls[i])); 
-
-
-/*        
-function isEqual(value, other) {
-
-    let type = Object.prototype.toString.call(value);
-
-    if (type !== Object.prototype.toString.call(other)){
-        return false
-    }
-       
-    return true
+function collisionControl() {// document.elementFromPoint !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //let wallNodes = document.querySelectorAll('.wall');
+    //let maze = document.querySelector('.maze');
+  //  let mazeClone = maze.cloneNode();
+    //var shadow = mazeClone.attachShadow({mode: 'open'});
+    //var caretPosition = document.caretPositionFromPoint(180, 180);
+    //wallNodes.forEach(e=>{
+      //  shadow.appendChild(e)
+    //})
+    //document.appendChild(shadow)
+  //  console.log(shadow)
 }
-*/
-
-function collisionControl() {
-    let wallNodes = document.querySelectorAll('.wall');
-    wallNodes.forEach(node=>{
-       console.log(player.style.left)
-    })
-}
-
+collisionControl()
 
 // left arrowkey === 37
 // right arrowkey === 39
@@ -121,7 +113,7 @@ function collisionControl() {
 // down arrowkey === 40
 document.addEventListener('keydown', function(event){
 
-    console.log(collisionControl())
+    
 
     if (event.keyCode === 39 || event.keyCode === 68) { //right
         coordinates.x+= 20;
