@@ -1,12 +1,19 @@
+// The maze is a square, so i only have one size listen, being the height. The height represents the amount of rowDivs the createWallDivs function should create. The width is the amount of columnDivs in the maze. This maze being a square, i only use one value.
+let xAxis = 0;
+let yAxis = 0;
+let height = 40;
 
-
-function createWallDivs(){ 
+function setMazeSize(){
     let maze = document.querySelector('.maze');
-    grid = [];
-    let rows = []
+    maze.style.width = height*20+'px';
+    maze.style.height = height*20+'px'
+}
 
-    let height = 25;
-    let width = 25;
+setMazeSize()
+
+function createWallDivs(){
+    let maze = document.querySelector('.maze');
+    let rows = []
 
    for (i=0; i<height; i++) {
        let row = [];
@@ -16,7 +23,7 @@ function createWallDivs(){
         for (j=0; j<rows.length; j++) {
 
             let column;
-            if (Math.random()*2 > 1.1){
+            if (Math.random()*2 > 1.9){
                 column = 1;
             } else {
                 column = 0;
@@ -47,7 +54,8 @@ function createWallDivs(){
 createWallDivs();
 
 
-function gridData(x, y){
+
+function gridData(y, x){
     let grid = [];
     let rows = document.querySelectorAll('.row')
 
@@ -55,48 +63,82 @@ function gridData(x, y){
         grid.push(e.children)
 
     })
-    return grid[x][y]
+
+    if (grid[y][x].style.backgroundColor !== 'blue'){
+        grid[y][x].style.backgroundColor = 'pink';
+    }
+
+    return grid[y][x]
 }
 
 
-let xAxis = 0;
-let yAxis = 0;
-gridData(xAxis, yAxis)
-document.addEventListener('keydown', function(event){ //move the player unit
-// Color the node gridNode that i am on pink. Pink is going to be the player unit. If the node i move into is === 1, then dont move. 
+function moveLeft(x) {
+    let grid = gridData(yAxis, xAxis)
     
+    if (grid.style.backgroundColor !== 'blue'){
+        xAxis-=x;
+    } else {
+        xAxis+=x;
+    }    
+}
+
+function moveRight(x) {
+    let grid = gridData(yAxis, xAxis)
    
-  
+    if (grid.style.backgroundColor !== 'blue'){
+        xAxis+=x
+    } else {
+       xAxis-=x;
+    }    
+}
+
+function moveUp(y) {
+    let grid = gridData(yAxis, xAxis)
+    
+    if (grid.style.backgroundColor !== 'blue'){
+        yAxis-=y;
+        
+    } else {
+        yAxis+=y;
+    }    
+}
+
+function moveDown(y) {
+    let grid = gridData(yAxis, xAxis)
+   
+    if (grid.style.backgroundColor !== 'blue'){
+        yAxis+=y;
+        
+    } else {
+       yAxis-=y;
+    }    
+}
+
+document.addEventListener('keydown', function(event){ //move the player unit
+// Color the gridNode that i am on pink. Pink is going to be the player unit. If the node i move into is === 1, then dont move.
+    
     if (xAxis < 0){xAxis = 0}
-    if (xAxis > 24){xAxis = 24}
+    if (xAxis > height){xAxis = height}
     if (yAxis < 0){yAxis = 0}
-    if (yAxis > 24){yAxis = 24}
+    if (yAxis > height){yAxis = height}
 
     if (event.keyCode === 37){ // left
-        yAxis-=1
+        moveLeft(1);
     }
 
     if (event.keyCode === 38){ // up
-        xAxis-=1;
+       moveUp(1);
     }
 
     if (event.keyCode === 39){ // right
-        yAxis+=1;
+        moveRight(1)
     }
 
     if (event.keyCode === 40){ // down
-        xAxis+=1;
+        moveDown(1);
     }
-
-    let grid = gridData(xAxis, yAxis);
     
-    console.log(xAxis, yAxis)  
 
-    if (grid.style.backgroundColor !== 'blue'){
-        grid.style.backgroundColor = 'pink';
-    }
-
-
-
+    console.log(yAxis, xAxis)
     
 })
