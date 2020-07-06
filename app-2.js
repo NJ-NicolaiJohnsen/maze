@@ -64,10 +64,6 @@ function gridData(y, x){
 
     })
 
-    if (grid[y][x].style.backgroundColor !== 'blue'){
-        grid[y][x].style.backgroundColor = 'pink';
-    }
-
     return grid[y][x]
 }
 
@@ -127,6 +123,7 @@ document.addEventListener('keydown', function(event){ //move the player unit
     let commands = moveCommands();
 
 
+
     if (xAxis < 0){xAxis = 0}
     if (xAxis > height){xAxis = height}
     if (yAxis < 0){yAxis = 0}
@@ -147,8 +144,13 @@ document.addEventListener('keydown', function(event){ //move the player unit
     if (event.keyCode === 40){ // down
         commands.down(1);
     }
-    
 
+
+    let grid = gridData(yAxis, xAxis)
+    if (grid.style.backgroundColor !== 'blue'){
+        grid.style.backgroundColor = 'pink';
+    }
+    
     console.log(yAxis, xAxis)
     
 })
