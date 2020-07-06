@@ -71,74 +71,85 @@ function gridData(y, x){
     return grid[y][x]
 }
 
-
-function moveLeft(x) {
+function moveCommands(){
     let grid = gridData(yAxis, xAxis)
+
+    function moveLeft(x) {
+        if (grid.style.backgroundColor !== 'blue'){
+            xAxis-=x;
+        } else {
+            xAxis+=x;
+        }    
+    }
     
-    if (grid.style.backgroundColor !== 'blue'){
-        xAxis-=x;
-    } else {
-        xAxis+=x;
-    }    
-}
+    function moveRight(x) {
 
-function moveRight(x) {
-    let grid = gridData(yAxis, xAxis)
-   
-    if (grid.style.backgroundColor !== 'blue'){
-        xAxis+=x
-    } else {
-       xAxis-=x;
-    }    
-}
-
-function moveUp(y) {
-    let grid = gridData(yAxis, xAxis)
+        if (grid.style.backgroundColor !== 'blue'){
+            xAxis+=x
+        } else {
+           xAxis-=x;
+        }    
+    }
     
-    if (grid.style.backgroundColor !== 'blue'){
-        yAxis-=y;
+    function moveUp(y) {
+       
         
-    } else {
-        yAxis+=y;
-    }    
+        if (grid.style.backgroundColor !== 'blue'){
+            yAxis-=y;
+            
+        } else {
+            yAxis+=y;
+        }    
+    }
+    
+    function moveDown(y) {
+        if (grid.style.backgroundColor !== 'blue'){
+            yAxis+=y;
+            
+        } else {
+           yAxis-=y;
+        }    
+    }
+
+    let commands = {
+        left: moveLeft,
+        right: moveRight,
+        up: moveUp,
+        down: moveDown
+    }
+
+    return commands;
 }
 
-function moveDown(y) {
-    let grid = gridData(yAxis, xAxis)
-   
-    if (grid.style.backgroundColor !== 'blue'){
-        yAxis+=y;
-        
-    } else {
-       yAxis-=y;
-    }    
-}
 
 document.addEventListener('keydown', function(event){ //move the player unit
 // Color the gridNode that i am on pink. Pink is going to be the player unit. If the node i move into is === 1, then dont move.
-    
+    let commands = moveCommands();
+
+
     if (xAxis < 0){xAxis = 0}
     if (xAxis > height){xAxis = height}
     if (yAxis < 0){yAxis = 0}
     if (yAxis > height){yAxis = height}
 
     if (event.keyCode === 37){ // left
-        moveLeft(1);
+        commands.left(1);
     }
 
     if (event.keyCode === 38){ // up
-       moveUp(1);
+        commands.up(1);
     }
 
     if (event.keyCode === 39){ // right
-        moveRight(1)
+        commands.right(1);
     }
 
     if (event.keyCode === 40){ // down
-        moveDown(1);
+        commands.down(1);
     }
     
 
     console.log(yAxis, xAxis)
     
 })
+
