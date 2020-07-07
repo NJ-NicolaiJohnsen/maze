@@ -16,14 +16,15 @@ function createWallDivs(){
     let rows = []
 
    for (i=0; i<height; i++) {
-       let row = [];
+       const row = [];
        rows.push(row)
     }
     for (i=0; i<rows.length; i++){
         for (j=0; j<rows.length; j++) {
 
             let column;
-            if (Math.random()*2 > 1.9){
+            const becomesBlue = Math.random() * 2 > 1.5;
+            if (becomesBlue){
                 column = 1;
             } else {
                 column = 0;
@@ -34,12 +35,12 @@ function createWallDivs(){
     }
 
     rows.forEach(row=>{
-        let rowDiv = document.createElement('DIV');
+        const rowDiv = document.createElement('DIV');
         rowDiv.className = 'row';
         maze.appendChild(rowDiv);
 
         row.forEach(column=>{
-            let columnDiv = document.createElement('DIV');
+            const columnDiv = document.createElement('DIV');
             columnDiv.className = 'column';
 
             if (column === 1) {
@@ -56,12 +57,11 @@ createWallDivs();
 
 
 function gridData(y, x){
-    let grid = [];
-    let rows = document.querySelectorAll('.row')
+    const grid = [];
+    const rows = document.querySelectorAll('.row')
 
     rows.forEach(e=>{
         grid.push(e.children)
-
     })
 
     return grid[y][x]
@@ -120,7 +120,7 @@ function moveCommands(){
 
 document.addEventListener('keydown', function(event){ //move the player unit
 // Color the gridNode that i am on pink. Pink is going to be the player unit. If the node i move into is === 1, then dont move.
-    let commands = moveCommands();
+    let commands = moveCommands(); //http: rosettacode.org/wiki/Maze_generation#JavaScript
 
 
 
