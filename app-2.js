@@ -2,6 +2,87 @@
 // 1. track the current position, and pass the current position on to the last position, when issuing a move command. Then style all the lastPosition coordinates to green.
 
 // 2. Generate a binary maze
+
+
+
+let x = 0;
+let y = 0;
+let height = 40;
+
+
+//let currentPosition = {y: 0, x: 0}
+let lastPosition = []
+
+
+
+function setMazeSize(){
+    let maze = document.querySelector('.maze');
+    maze.style.width = height*20+'px';
+    maze.style.height = height*20+'px'
+}
+
+setMazeSize()
+
+function createWallDivs(){
+    let maze = document.querySelector('.maze');
+    let rows = []
+
+   for (i=0; i<height; i++) {
+       const row = [];
+       rows.push(row)
+    }
+    for (i=0; i<rows.length; i++){
+        for (j=0; j<rows.length; j++) {
+
+            let column;
+            const becomesBlue = Math.random() * 2 > 2;
+            if (becomesBlue){
+                column = 1;
+            } else {
+                column = 0;
+            }
+            
+            rows[i].push(column)
+        }
+    }
+
+    rows.forEach(row=>{
+        const rowDiv = document.createElement('DIV');
+        rowDiv.className = 'row';
+        maze.appendChild(rowDiv);
+
+        row.forEach(column=>{
+            const columnDiv = document.createElement('DIV');
+            columnDiv.className = 'column';
+
+            if (column === 1) {
+                columnDiv.style.backgroundColor = 'blue'
+            }
+            rowDiv.appendChild(columnDiv)
+        })
+    })
+ 
+}
+createWallDivs();
+
+let grid = []
+
+function gridData(){
+    const rows = document.querySelectorAll('.row')
+    if (rows) {
+        rows.forEach(e=>{
+            grid.push(e.children)
+        })
+    } else {
+        throw "Something went wrong!"
+    }
+}
+gridData()
+
+
+
+
+
 /*
 function generateBinaryMaze() {
     // 10 ROWS OF 10 DIVS
@@ -26,126 +107,70 @@ function generateBinaryMaze() {
     }
 }
 */
-
-
-let xAxis = 0;
-let yAxis = 0;
-let height = 800/20;
-
-let currentPosition = {x: 0, y: 0}
-let lastPosition = {x: xAxis, y: yAxis}
-
-
-
-function setMazeSize(){
-    let maze = document.querySelector('.maze');
-    maze.style.width = height*20+'px';
-    maze.style.height = height*20+'px'
-}
-
-setMazeSize()
-
-function createWallDivs(){
-    let maze = document.querySelector('.maze');
-    let rows = []
-
-   for (i=0; i<height; i++) {
-       const row = [];
-       rows.push(row)
-    }
-    for (i=0; i<rows.length; i++){
-        for (j=0; j<rows.length; j++) {
-
-            let column;
-            const becomesBlue = Math.random() * 2 > 1.5;
-            if (becomesBlue){
-                column = 1;
+function generateBinaryMaze(){
+    const rowsToUse = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37]
+    const columnsToUse = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37]
+    
+    rowsToUse.forEach(row=>{
+        columnsToUse.forEach(column=>{  
+            grid[row][column].style.backgroundColor = 'blue'
+            const divToLeft = Math.random()*2 > 1;
+            if (divToLeft) {
+                grid[row][column-1].style.backgroundColor = 'blue'
             } else {
-                column = 0;
-            }
-            
-            rows[i].push(column)
-        }
-    }
-
-    rows.forEach(row=>{
-        const rowDiv = document.createElement('DIV');
-        rowDiv.className = 'row';
-        maze.appendChild(rowDiv);
-
-        row.forEach(column=>{
-            const columnDiv = document.createElement('DIV');
-            columnDiv.className = 'column';
-
-            if (column === 1) {
-                columnDiv.style.backgroundColor = 'blue'
-            }
-
-            rowDiv.appendChild(columnDiv)
+                grid[row-1][column].style.backgroundColor = 'blue'
+            } 
         })
     })
- 
+
+   
+    
+    
 }
-createWallDivs();
 
-let gridCoordinates = []
+generateBinaryMaze()
 
-function gridData(){
-    const grid = [];
-    const rows = document.querySelectorAll('.row')
-    if (rows) {
-        rows.forEach(e=>{
-            grid.push(e.children)
-            gridCoordinates.push(e.children)
-        })
-    } else {
-        throw "Something went wrong!"
-    }
-}
-gridData()
 
-// if coordinate === 1, not passable
 
-console.log(gridCoordinates)
+
+
+
+grid[0][0].style.backgroundColor = 'pink'
+
+
+
+
+
+
 
 function moveCommands(){
-    let grid = gridData(yAxis, xAxis)
 
-    function moveLeft(x) {
-        if (grid.style.backgroundColor !== 'blue'){
-            xAxis-=x;
-        } else {
-            xAxis+=x;
-        }    
+    function moveLeft() {
+        if (grid[y][x-1] && grid[y][x-1].style.backgroundColor !== 'blue'){
+            x-=1
+            lastPosition.push(grid[y][x])
+        } 
     }
-    
-    function moveRight(x) {
 
-        if (grid.style.backgroundColor !== 'blue'){
-            xAxis+=x
-        } else {
-           xAxis-=x;
-        }    
+    function moveRight() {
+        if (grid[y][x+1] && grid[y][x+1].style.backgroundColor !== 'blue'){
+            x+=1
+            lastPosition.push(grid[y][x])
+        }   
     }
     
-    function moveUp(y) {
-       
-        
-        if (grid.style.backgroundColor !== 'blue'){
-            yAxis-=y;
-            
-        } else {
-            yAxis+=y;
-        }    
+    function moveUp() {
+        if (grid[y][x] && grid[y-1][x].style.backgroundColor !== 'blue'){
+            y-=1
+            lastPosition.push(grid[y][x])
+        }
     }
     
-    function moveDown(y) {
-        if (grid.style.backgroundColor !== 'blue'){
-            yAxis+=y;
-            
-        } else {
-           yAxis-=y;
-        }    
+    function moveDown() {
+        if (grid[y][x] && grid[y+1][x].style.backgroundColor !== 'blue'){
+            y+=1
+            lastPosition.push(grid[y][x])
+        }
     }
 
     let commands = {
@@ -154,45 +179,44 @@ function moveCommands(){
         up: moveUp,
         down: moveDown
     }
-
+    turnColumnBackToGreen()
     return commands;
 }
 
+
+function turnColumnBackToGreen(){
+    for (i=0; i<lastPosition.length; i++){
+        lastPosition[i].style.backgroundColor = null;
+    }
+}
 
 document.addEventListener('keydown', function(event){ //move the player unit
 // Color the gridNode that i am on pink. Pink is going to be the player unit. If the node i move into is === 1, then dont move.
     let commands = moveCommands(); //http:rosettacode.org/wiki/Maze_generation#JavaScript
 
-
-
-    if (xAxis < 0){xAxis = 0}
-    if (xAxis > height){xAxis = height}
-    if (yAxis <= 0){yAxis = 0}
-    if (yAxis > height){yAxis = height}
-
     if (event.keyCode === 37){ // left
-        commands.left(1);
+        commands.left();
+        
     }
 
     if (event.keyCode === 38){ // up
-        commands.up(1);
+        commands.up();
     }
 
     if (event.keyCode === 39){ // right
-        commands.right(1);
+        commands.right();
     }
 
     if (event.keyCode === 40){ // down
-        commands.down(1);
+        commands.down();
     }
+    console.log(y, x)
 
-
-    let grid = gridData(yAxis, xAxis)
-    if (grid.style.backgroundColor !== 'blue'){
-        grid.style.backgroundColor = 'pink';
+    if (grid[y][x] && grid[y][x].style.backgroundColor !== 'blue'){
+        grid[y][x].style.backgroundColor = 'pink';
     }
     
-    console.log(yAxis, xAxis)
+    //console.log(grid[y][x])
     
 })
 
