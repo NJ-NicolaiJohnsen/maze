@@ -1,19 +1,13 @@
 // The maze is a square, so i only have one size listen, being the height. The height represents the amount of rowDivs the createWallDivs function should create. The width is the amount of columnDivs in the maze. This maze being a square, i only use one value.
-// 1. track the current position, and pass the current position on to the last position, when issuing a move command. Then style all the lastPosition coordinates to green.
 
-// 2. Generate a binary maze
 
 
 
 let x = 0;
 let y = 0;
-let height = 40;
-
-
-//let currentPosition = {y: 0, x: 0}
+let height = 39;
 let lastPosition = []
-
-
+let grid = []
 
 function setMazeSize(){
     let maze = document.querySelector('.maze');
@@ -31,17 +25,11 @@ function createWallDivs(){
        const row = [];
        rows.push(row)
     }
+
     for (i=0; i<rows.length; i++){
         for (j=0; j<rows.length; j++) {
 
-            let column;
-            const becomesBlue = Math.random() * 2 > 2;
-            if (becomesBlue){
-                column = 1;
-            } else {
-                column = 0;
-            }
-            
+            let column; 
             rows[i].push(column)
         }
     }
@@ -51,13 +39,10 @@ function createWallDivs(){
         rowDiv.className = 'row';
         maze.appendChild(rowDiv);
 
-        row.forEach(column=>{
+        row.forEach(()=>{
             const columnDiv = document.createElement('DIV');
             columnDiv.className = 'column';
 
-            if (column === 1) {
-                columnDiv.style.backgroundColor = 'blue'
-            }
             rowDiv.appendChild(columnDiv)
         })
     })
@@ -65,7 +50,7 @@ function createWallDivs(){
 }
 createWallDivs();
 
-let grid = []
+
 
 function gridData(){
     const rows = document.querySelectorAll('.row')
@@ -79,34 +64,6 @@ function gridData(){
 }
 gridData()
 
-
-
-
-
-/*
-function generateBinaryMaze() {
-    // 10 ROWS OF 10 DIVS
-    // 1. go to a div
-    // 2. color either the div to the right blue, or the div below blue
-    // 3. skip a div
-    // 4. repeat
-
-    const currentRow = // get the nth child of the maze
-    const divsYoullUse = // get divs 0, 2, 4, 6, 8 etc
-    for (const div in divsYoullUse) {  // div is 
-        const wallIsToTheRight = Math.random() * 2 > 1
-        if (wallIsToTheRight) {
-            const divToTheRight = currentRow[divIndex + 1]
-            divToTheRight.style.backgroundColor = "blue"
-            recordOfWallCoords.push([index, divIndex + 1])
-        } else {
-            const divBelow = maze.children[index + 1].children[divIndex]
-            divBelow.style.backgroundColor = "blue"
-            recordOfWallCoords.push([index + 1, divIndex])
-        }
-    }
-}
-*/
 function generateBinaryMaze(){
     const rowsToUse = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37]
     const columnsToUse = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37]
@@ -121,27 +78,10 @@ function generateBinaryMaze(){
                 grid[row-1][column].style.backgroundColor = 'blue'
             } 
         })
-    })
-
-   
-    
-    
+    })    
 }
 
 generateBinaryMaze()
-
-
-
-
-
-
-grid[0][0].style.backgroundColor = 'pink'
-
-
-
-
-
-
 
 function moveCommands(){
 
@@ -183,7 +123,6 @@ function moveCommands(){
     return commands;
 }
 
-
 function turnColumnBackToGreen(){
     for (i=0; i<lastPosition.length; i++){
         lastPosition[i].style.backgroundColor = null;
@@ -196,7 +135,6 @@ document.addEventListener('keydown', function(event){ //move the player unit
 
     if (event.keyCode === 37){ // left
         commands.left();
-        
     }
 
     if (event.keyCode === 38){ // up
@@ -210,13 +148,10 @@ document.addEventListener('keydown', function(event){ //move the player unit
     if (event.keyCode === 40){ // down
         commands.down();
     }
-    console.log(y, x)
 
     if (grid[y][x] && grid[y][x].style.backgroundColor !== 'blue'){
         grid[y][x].style.backgroundColor = 'pink';
     }
-    
-    //console.log(grid[y][x])
     
 })
 
