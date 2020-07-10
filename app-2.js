@@ -1,20 +1,7 @@
 // The maze is a square, so i only have one size listen, being the height. The height represents the amount of rowDivs the createWallDivs function should create. The width is the amount of columnDivs in the maze. This maze being a square, i only use one value.
 
 
-doTheWholeShebang(79)
-const x = {
-    small: [1, 3, 5, 7, 9, 11, 13, 15, 17],
-    medium: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37],
-    large: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53, 55, 57, 59, 61, 63, 65, 67, 69, 71, 73, 75, 77]
-}
-let width = 89;
-
-
-
-
-
-
-
+doTheWholeShebang(19)
 
 function chooseSize(){
     let height;
