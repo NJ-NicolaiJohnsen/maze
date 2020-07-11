@@ -1,7 +1,58 @@
 // The maze is a square, so i only have one size listen, being the height. The height represents the amount of rowDivs the createWallDivs function should create. The width is the amount of columnDivs in the maze. This maze being a square, i only use one value.
 
+// Figure out how classes work
+// constructors  - a blueprint for an object. Defined within a class
+// The first letter in class names are capatilized
 
-doTheWholeShebang(19)
+
+
+
+class MazeProperties {
+    constructor(width, height){
+        this.width = width;
+        this.height = height;
+    }
+
+    setSize() {
+        for (let i=0; i<this.width; i++){
+            for (let j=0; i< this.height; j++){
+                let div = document.createElement('DIV');
+                div.style.height = "20px";
+                div.style.width = "20px";
+                div.style.border = "1px solid black";
+                this.appendChild(div)
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+doTheWholeShebang(document.getElementById('sizes').options[0].value/20)
+
 
 function chooseSize(){
     let height;
@@ -12,6 +63,7 @@ function chooseSize(){
     maze.remove();
     doTheWholeShebang(height)
 }
+
 
 function doTheWholeShebang(height){
 
@@ -61,6 +113,7 @@ function doTheWholeShebang(height){
             })
         
     }
+
     createWallDivs();
 
 
@@ -121,7 +174,7 @@ function doTheWholeShebang(height){
     generateBinaryMaze()
 
     function moveCommands(){
-
+        //console.log(y, x)
         function moveLeft() {
             if (grid[y][x-1] && grid[y][x-1].style.backgroundColor !== 'blue'){
                 x-=1
@@ -137,14 +190,15 @@ function doTheWholeShebang(height){
         }
         
         function moveUp() {
-            if (grid[y][x] && grid[y-1][x].style.backgroundColor !== 'blue'){
+            if (grid[y-1] && grid[y-1][x].style.backgroundColor !== 'blue'){
                 y-=1
+                
                 lastPosition.push(grid[y][x])
             }
         }
         
         function moveDown() {
-            if (grid[y][x] && grid[y+1][x].style.backgroundColor !== 'blue'){
+            if (grid[y+1] && grid[y+1][x].style.backgroundColor !== 'blue'){
                 y+=1
                 lastPosition.push(grid[y][x])
             }
@@ -166,30 +220,34 @@ function doTheWholeShebang(height){
         }
     }
 
-    document.addEventListener('keydown', function(event){ //move the player unit
-    // Color the gridNode that i am on pink. Pink is going to be the player unit. If the node i move into is === 1, then dont move.
-        let commands = moveCommands(); //http:rosettacode.org/wiki/Maze_generation#JavaScript
+    document.addEventListener('keydown', movePlayer)
 
-        if (event.keyCode === 37){ // left
-            commands.left();
-        }
+    function movePlayer(event){ //move the player unit
+        // Color the gridNode that i am on pink. Pink is going to be the player unit. If the node i move into is === 1, then dont move.
+            let commands = moveCommands(); //http:rosettacode.org/wiki/Maze_generation#JavaScript
+    
+            if (event.keyCode === 37){ // left
+                commands.left();
+            }
+    
+            if (event.keyCode === 38){ // up
+                commands.up();
+            }
+    
+            if (event.keyCode === 39){ // right
+                commands.right();
+            }
+    
+            if (event.keyCode === 40){ // down
+                commands.down();
+            }
+            console.log(y, x)
+    
+            if (grid[y][x] && grid[y][x].style.backgroundColor !== 'blue'){
+                grid[y][x].style.backgroundColor = 'pink';
+            }
+    }
 
-        if (event.keyCode === 38){ // up
-            commands.up();
-        }
-
-        if (event.keyCode === 39){ // right
-            commands.right();
-        }
-
-        if (event.keyCode === 40){ // down
-            commands.down();
-        }
-
-        if (grid[y][x] && grid[y][x].style.backgroundColor !== 'blue'){
-            grid[y][x].style.backgroundColor = 'pink';
-        }
-        
-    })
-
+    document.addEventListener('DOMContentLoaded', movePlayer(38))
 }
+

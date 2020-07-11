@@ -52,11 +52,12 @@
 }
 
 .column {
-    
+    box-sizing: border-box;
     float: left;
     width: 20px;
     height: 100%;
-    background: green;
+    
+    border: 0.1px solid black;
     
 }
 
