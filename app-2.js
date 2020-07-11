@@ -7,6 +7,37 @@
 
 
 
+class Person {
+    constructor(age, name, height) {
+        this.intro = 'my name is ' + name + ', I am ' + age ' years old and i am ' + height + ' centimeters tall. Nice to meet you!'
+    }
+}
+
+let me = new Person;
+
+console.log(me)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 class MazeProperties {
     constructor(width, height){
         this.width = width;
@@ -25,29 +56,6 @@ class MazeProperties {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -251,3 +259,4 @@ function doTheWholeShebang(height){
     document.addEventListener('DOMContentLoaded', movePlayer(38))
 }
 
+*/
