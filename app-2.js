@@ -1,8 +1,10 @@
 // The maze is a square, so i only have one size listen, being the height. The height represents the amount of rowDivs the createWallDivs function should create. The width is the amount of columnDivs in the maze. This maze being a square, i only use one value.
 
-// Figure out how classes work
-// constructors  - a blueprint for an object. Defined within a class
-// The first letter in class names are capatilized
+// Classes are essentially just the layout of an object. That means they are objects-to-be
+// The constructor determines which key-value pairs the object has. When you instantiate
+// the class, you pass arguments as the parameters of the constructor, and those arguments then
+// become the value of the key  - value pairs of the new object.
+// Classes also have methods.
 
 
 
@@ -21,27 +23,6 @@
 
 
 
-
-
-
-class MazeProperties {
-    constructor(width, height){
-        this.width = width;
-        this.height = height;
-    }
-
-    setSize() {
-        for (let i=0; i<this.width; i++){
-            for (let j=0; i< this.height; j++){
-                let div = document.createElement('DIV');
-                div.style.height = "20px";
-                div.style.width = "20px";
-                div.style.border = "1px solid black";
-                this.appendChild(div)
-            }
-        }
-    }
-}
 
 
 
@@ -124,45 +105,61 @@ function doTheWholeShebang(height){
     }
     gridData()
 
+
     function generateBinaryMaze(){
-        let rowsToUse;
-        let columnsToUse;
-        const rowSizes = {
-            small: [1, 3, 5, 7, 9, 11, 13, 15, 17],
-            medium: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37],
-            large: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53, 55, 57, 59, 61, 63, 65, 67, 69, 71, 73, 75, 77]
-        }
-        
-        const columSizes = {
-            small: [1, 3, 5, 7, 9, 11, 13, 15, 17],
-            medium: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37],
-            large: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53, 55, 57, 59, 61, 63, 65, 67, 69, 71, 73, 75, 77]
-        }
-        
-        if (rowSizes.small[rowSizes.small.length-1] < height &&
-             rowSizes.medium[rowSizes.medium.length-1] > height) {
-                rowsToUse = rowSizes.small
-                columnsToUse = columSizes.small
-        } else if (rowSizes.medium[rowSizes.medium.length-1] < height &&
-            rowSizes.large[rowSizes.large.length-1] > height) {
-                rowsToUse = rowSizes.medium
-                columnsToUse = columSizes.medium
-        } else {
-                rowsToUse = rowSizes.large
-                columnsToUse = columSizes.large
-        }
-        
-        rowsToUse.forEach(row=>{
-            columnsToUse.forEach(column=>{  
-                grid[row][column].style.backgroundColor = 'blue'
-                const divToLeft = Math.random()*2 > 1;
-                if (divToLeft) {
-                    grid[row][column-1].style.backgroundColor = 'blue'
+
+        class BinaryMaze {
+            constructor(y, x){
+
+                this.yPosition = y;
+                this.xPosition = x;
+                this.toTheLeft = this.xPosition+1;
+                this.isAbove = this.yPosition+1;
+                this.wallIsAbove = Math.random()*2 > 1;
+            }
+    
+            orderlyFillOut(){
+                grid[this.yPosition][this.xPosition].style.backgroundColor = 'blue';
+            }
+    
+            binaryControl(){
+                if (this.wallIsAbove) {
+                    grid[this.isAbove][this.xPosition].style.backgroundColor = 'blue';
                 } else {
-                    grid[row-1][column].style.backgroundColor = 'blue'
-                } 
+                    grid[this.yPosition][this.toTheLeft].style.backgroundColor = 'blue';
+                }
+            }
+
+            static pattern(height){
+                this.rowsToUse = []
+                for (i=1; i<height; i+=2){
+                    this.rowsToUse.push(i)
+                }
+                this.columnsToUse = [];
+                for (j = 1; j<height; j+=2){
+                    this.columnsToUse.push(j)
+                }
+                this.coordinates = {
+                    xCoord: this.rowsToUse,
+                    yCoord: this.columnsToUse,
+                }
+
+                return this.coordinates;
+            }
+    
+        }
+
+        console.log(BinaryMaze.pattern(height))
+        let wall;
+        
+        BinaryMaze.pattern(height).yCoord.forEach(row=>{
+            BinaryMaze.pattern(height).xCoord.forEach(column=>{
+                wall = new BinaryMaze(row, column)
+                wall.orderlyFillOut()
+                wall.binaryControl()
             })
-        })    
+        })
+ 
     }
 
     generateBinaryMaze()

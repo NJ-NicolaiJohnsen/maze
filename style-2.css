@@ -47,7 +47,7 @@
 .row {
     height: 20px;
     width: auto;
-    line-height: 200px;
+    
     
 }
 
@@ -57,7 +57,6 @@
     width: 20px;
     height: 100%;
     
-    border: 0.1px solid black;
     
 }
 
