@@ -48,28 +48,30 @@ function doTheWholeShebang(height){
         for (i=0; i<height; i++) {
             const row = [];
             rows.push(row)
+        }
+        let weights = [];
+        for (i=0; i<rows.length; i++){
+            for (j=0; j<rows.length; j++) {
+                weights.push( j)
+                let column = i + j
+                
+                
+                rows[i].push(column)
             }
+        }
+        console.log(weights)
+        rows.forEach(row=>{
+            const rowDiv = document.createElement('DIV');
+            rowDiv.className = 'row';
+            maze.appendChild(rowDiv);
 
-            for (i=0; i<rows.length; i++){
-                for (j=0; j<rows.length; j++) {
+            row.forEach(()=>{
+                const columnDiv = document.createElement('DIV');
+                columnDiv.className = 'column';
 
-                    let column; 
-                    rows[i].push(column)
-                }
-            }
-
-            rows.forEach(row=>{
-                const rowDiv = document.createElement('DIV');
-                rowDiv.className = 'row';
-                maze.appendChild(rowDiv);
-
-                row.forEach(()=>{
-                    const columnDiv = document.createElement('DIV');
-                    columnDiv.className = 'column';
-
-                    rowDiv.appendChild(columnDiv)
-                })
+                rowDiv.appendChild(columnDiv)
             })
+        })
         
     }
     createWallDivs();
