@@ -31,7 +31,7 @@
 
 
 
-doTheWholeShebang(10)
+doTheWholeShebang(19)
 
 function chooseSize(){
     let height;
@@ -53,8 +53,8 @@ function doTheWholeShebang(height){
     function setMazeSize(){
         let maze = document.createElement('div');
         maze.className = 'maze';
-        maze.style.width = height*50+'px';
-        maze.style.height = height*50+'px'
+        maze.style.width = height*20+'px';
+        maze.style.height = height*20+'px'
         document.body.appendChild(maze)
     }
 
@@ -94,6 +94,7 @@ function doTheWholeShebang(height){
         })
         
     }
+
     createWallDivs();
 
 
@@ -111,22 +112,90 @@ function doTheWholeShebang(height){
     gridData()
 
 
+    /*
     function generateKruskalMaze(){
+        for (let i = 0; i<grid.length; i++){
+            grid[grid.length-1][i].style.borderBottom = '0px'
+            grid[i][grid[i].length-1].style.borderRight = '0px'
+            for (let j=0; j<grid[i].length; j++){
+                grid[i][j].style.backgroundColor = 'blue';
+            }
+        }
+// create an identical array to the global grid, so i dont modify the global grid, yet i am still able to work with the grids items inside this function. That is the logic anyways
+        let gridArray = [];
+        for (let i=0; i < grid.length; i++){
+            for (let j=0; j<grid[i].length; j++){
+                gridArray.push(grid[i][j])
+            }
+            
+        }
 
         let tracker = [];
-        /*
-        class RandomCoord {
-            constructor(height) {
-                this.coord1 = {
-                    xCoord: Math.floor(Math.random()*height),
-                    yCoord: Math.floor(Math.random()*height)
-                }
-                this.condition = Math.random()*2>1;
-                
+        function getRandomArbitrary(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function removeWall(index1, index2){
+            if (gridArray[index1]){
+                gridArray[index1].style.backgroundColor = null;
             }
-        
-            secondCoord(){
-                this.coord2 = {};
+
+            /*gridArray[index2].style.backgroundColor = null;
+
+            if (index2 > index1-2){
+                gridArray[index2].style.borderBottom = '0px';
+            } else {
+                gridArray[index2].style.borderRight = '0px';
+            }
+            
+        }
+
+        function twoRandomIndexes(){
+            const index1 = Math.floor(getRandomArbitrary(height, gridArray.length));
+            const condition = Math.random()*2>1;
+            //const index2 = condition ? index1-1 : index1-height
+            
+            //console.log("one",gridArray[index1], "two", gridArray[index2])
+            // console.log(index1)
+            gridArray.splice(gridArray[index1], 1)
+           // gridArray.splice(gridArray[index2], 1)
+            removeWall(index1);
+        }
+
+        for (let i = (gridArray.length-1); i>=0; i--){
+            twoRandomIndexes()
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        class RandomCoord {
+            constructor() {
+                this.coord1 = {
+                    xCoord: Math.floor(getRandomArbitrary(0, gridArray.length)),
+                    yCoord: Math.floor(getRandomArbitrary(1, gridArray.length))
+                }
+
+                this.condition = Math.random()*2>1;
+                this.coord2 = {}
+
                 if (this.condition){
                     this.coord2.xCoord = this.coord1.xCoord-1,
                     this.coord2.yCoord = this.coord1.yCoord
@@ -134,80 +203,110 @@ function doTheWholeShebang(height){
                     this.coord2.xCoord = this.coord1.xCoord,
                     this.coord2.yCoord = this.coord1.yCoord-1;
                 }
-                return this.coord2
             }
-
+        
             wallRemoval(){
-                if (grid[this.coord1.yCoord-1] && grid[this.coord1.yCoord][this.coord1.xCoord-1]){
-
-                    if (this.secondCoord().xCoord === this.coord1.xCoord) {
-                        if (!tracker.includes(grid[this.coord1.yCoord][this.coord1.xCoord].value)){
-                            
-                            grid[this.coord1.yCoord][this.coord1.xCoord].style.borderRight ='0px';
-                            
-                            tracker.push(grid[this.coord1.yCoord][this.coord1.xCoord].value)
-                        }
-                    } else {
-                        if (!tracker.includes(grid[this.secondCoord().yCoord][this.secondCoord().xCoord].value)){
-
-                            grid[this.secondCoord().yCoord][this.secondCoord().xCoord].style.borderBottom = '0px';
-                            
-                            tracker.push(grid[this.secondCoord().yCoord][this.secondCoord().xCoord].value)
-                        }
-                    }
-                }
-            }
-        }
-
-        let randXY;
-        
-        for (i = 0; i < height; i++){
-            for (j=0; j < height; j++){
-                if (Math.random()*2>1){
-                    grid[i][j].style.borderBottom = '0px'
-                } else {
-                    grid[i][j].style.borderRight = '0px'
-                }
+               
                 
+
+
+                if (gridArray[this.coord2.yCoord] && gridArray[this.coord2.yCoord][this.coord2.xCoord]){
+                    gridArray[this.coord1.yCoord][this.coord1.xCoord].style.backgroundColor = null;
+                    gridArray[this.coord2.yCoord][this.coord2.xCoord].style.backgroundColor = null;
+                    if (this.coord2.yCoord == this.coord1.yCoord) {
+                            
+                        gridArray[this.coord2.yCoord][this.coord2.xCoord].style.borderRight ='0px';
+                        
+                    } else {
+                        gridArray[this.coord2.yCoord][this.coord2.xCoord].style.borderBottom = '0px';
+                        
+                       
+                    }
+                   // gridArray.splice(gridArray[this.coord1.yCoord][this.coord1.xCoord], 1)
+                    //gridArray.splice(gridArray[this.coord2.yCoord][this.coord2.xCoord], 1)
+                }
             }
         }
-        */
-        let gridArray = [];
-        
 
+        let ting;
+        for (let i = 0; i< gridArray.length; i++){
+            for (let j = 0; j<gridArray[i].length; j++){
+                ting = new RandomCoord()
+                ting.wallRemoval()
+            }
+            
+        }
         
-        for (i=0; i<grid.length; i++){
-            for (j=0; j<grid.length; j++){
+       
+        
+    }
+    generateKruskalMaze()
+      
+      */
+
+    
+     function kruskalMaze(){
+
+        function getRandomArbitrary(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        let gridArray = [];
+        for (let i = 0; i< grid.length; i++){
+           
+            for (let j = 0; j<grid[i].length; j++){
                 gridArray.push(grid[i][j])
             }
         }
+        
+        // what do i want to do now? I want to randomly pick an index of the array, then style that index, and remove it.
+        // that can be accomplished by first removing it, then styling it.
 
-        //function arrayRemove(arr, value) {
-        //    return arr.filter(function(ele){ return ele != value; });
-       // }
-        // arrayRemove(gridArray, gridArray[Math.floor(Math.random()*gridArray.length)])
+        let removedItems;
 
-        let newArray = [];
-        function chooseRandom(){
-            //for (i=0; i<gridArray.length; i++){
-                
-                let random = Math.floor(Math.random()*gridArray.length);
-                let fun = gridArray[random]
-                let index = gridArray.indexOf(fun)
-                let deletes = gridArray.filter(func=>func)
-                console.log(deletes)
-            //}
+        function randomlyChooseIndex(){
+            const randomIndex = Math.floor(getRandomArbitrary(0, gridArray.length))
+            let condition = Math.random()*2>1;
+           // const index2 = condition? randomIndex-1 : randomIndex - height;
+
+            //console.log(index2)
+
+            if (condition){
+                gridArray[randomIndex].style.borderRight = '0px';
+            } else {
+                gridArray[randomIndex].style.borderBottom = '0px'
+            }
             
-            
-           
+            gridArray.splice(randomIndex, 1)
+            //gridArray.splice(index2, 1)
+            return gridArray[randomIndex]
         }
-        chooseRandom()
 
-      
+        let x = setInterval(function(){
+            randomlyChooseIndex();
+            if (randomlyChooseIndex() == undefined){
+                //clearInterval(x)
+                throw "Error"
+               
+            }
+        }, 100)
+
+        
+  
+
+
+       // console.log(removedItems)
+
+
+
+
     }
-    generateKruskalMaze()
 
+    
+    kruskalMaze()
 /*
+    
+
     function generateBinaryMaze(){
 
         class BinaryMaze {
@@ -234,11 +333,11 @@ function doTheWholeShebang(height){
 
             static pattern(height){
                 this.rowsToUse = []
-                for (i=1; i<height; i+=2){
+                for (i=0; i<height; i++){
                     this.rowsToUse.push(i)
                 }
                 this.columnsToUse = [];
-                for (j = 1; j<height; j+=2){
+                for (j = 0; j<height; j++){
                     this.columnsToUse.push(j)
                 }
                 this.coordinates = {
@@ -258,14 +357,16 @@ function doTheWholeShebang(height){
             BinaryMaze.pattern(height).xCoord.forEach(column=>{
                 wall = new BinaryMaze(row, column)
                 wall.orderlyFillOut()
-                wall.binaryControl()
+                
             })
         })
- 
+        
+
     }
 
+    
     generateBinaryMaze()
-*/
+    */
     function moveCommands(){
 
         function moveLeft() {
