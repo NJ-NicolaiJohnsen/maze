@@ -63,36 +63,18 @@ function doTheWholeShebang(height){
     function createWallDivs(){
         let maze = document.querySelector('.maze');
         let rows = []
-
-        for (i=0; i<height; i++) {
-            const row = [];
-            rows.push(row)
-        }
         
-
-        
-        for (i=0; i<rows.length; i++){
-            for (j=0; j<rows.length; j++) {
-                let column
-                rows[i].push(column)
+        for (i=0; i<height; i++){
+            rows[i] = document.createElement('div');
+            rows[i].className = 'row';
+            maze.appendChild(rows[i]);
+            for (j=0; j<height; j++) {
+               rows[i][j] = document.createElement('DIV');
+               rows[i][j].className = 'column';
+               rows[i].appendChild(rows[i][j])
             }
         }
-        let n = 0;
-        rows.forEach(row=>{
-            const rowDiv = document.createElement('DIV');
-            rowDiv.className = 'row';
-            maze.appendChild(rowDiv);
 
-            row.forEach(()=>{
-                n++
-                //console.log(n)
-                const columnDiv = document.createElement('DIV');
-                columnDiv.className = 'column';
-                columnDiv.value = n;
-                rowDiv.appendChild(columnDiv)
-            })
-        })
-        
     }
 
     createWallDivs();
@@ -282,14 +264,13 @@ function doTheWholeShebang(height){
             return gridArray[randomIndex]
         }
 
-        let x = setInterval(function(){
-            randomlyChooseIndex();
-            if (randomlyChooseIndex() == undefined){
-                //clearInterval(x)
-                throw "Error"
-               
+        while(true) {
+            randomlyChooseIndex()
+
+            if (randomlyChooseIndex() == undefined) {
+                break;
             }
-        }, 100)
+        }
 
         
   

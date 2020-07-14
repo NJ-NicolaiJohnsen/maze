@@ -10,7 +10,7 @@ class Cell {
     this.inMaze = false;
   }
   show() {
-      if (this.inMaze){ c.fillRect(this.i*inc, this.j*inc, inc, inc)};
+      if (this.inMaze){ c.fillRect(this.i*20, this.j*20, 20, 20)};
 }
 }
 class Wall {
@@ -42,9 +42,10 @@ class Wall {
     c.lineTo(this.x2, this.y2);
     c.stroke();
   }
-}
-let inc = 10;
-let speed = 3;
+} 
+
+let inc = 20;
+let speed = 20;
 let done = false;
 let cols = Math.ceil(canvas.width/inc);
 let rows = Math.ceil(canvas.height/inc);
@@ -53,6 +54,7 @@ for (let i = 0; i < cols; i++) {
   cells[i] = [];
   for (let j = 0; j < rows; j++) cells[i][j] = new Cell(i, j);
 }
+
 let walls = [];
 let closed = [];
 for (let i = 0; i < cols; i++) {
@@ -64,30 +66,54 @@ for (let i = 0; i < cols; i++) {
 c.fillStyle = 'rgb(255, 255, 255)';
 c.lineCap = 'square';
 c.lineWidth = inc/2;
-
+//console.log(cells[walls[500].i1][walls[1000].j1])
 function draw() {
   c.clearRect(0, 0, canvas.width, canvas.height);
   for (let a = 0; a < speed; a++) {
+    
     while (true) {
       let index;
-      for (let i = 0; i < walls.length; i++) if (walls[index] == undefined || walls[i].weight < walls[index].weight) index = i;
+      
+      for (let i = 0; i < walls.length; i++) {
+        if (walls[index] == undefined || walls[i].weight < walls[index].weight) {
+          index = i;
+        
+        }
+      }
+
       let newIndex = cells[walls[index].i1][walls[index].j1].index;
+      
       let oldIndex = cells[walls[index].i2][walls[index].j2].index;
       if (oldIndex != newIndex) {
         cells[walls[index].i1][walls[index].j1].inMaze = true;
+        
         cells[walls[index].i2][walls[index].j2].inMaze = true;
-        for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) if (cells[i][j].index == oldIndex) cells[i][j].index = newIndex;
+
+        for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) {
+          if (cells[i][j].index == oldIndex) {
+            cells[i][j].index = newIndex;
+          }
+        }
+
         walls.splice(index, 1);
         break;
-      } else closed.push(walls[index]);
+      } else {
+        closed.push(walls[index]);
+      }
+
       walls.splice(index, 1);
-      if (walls.length == 0) break;
+
+      if (walls.length == 0) {
+        break;
+      }
     }
     if (walls.length == 0) break;
   }
   for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) cells[i][j].show();
   for (let i = 0; i < walls.length; i++) if (cells[walls[i].i1][walls[i].j1].inMaze || cells[walls[i].i2][walls[i].j2].inMaze) walls[i].show();
   for (let i = 0; i < closed.length; i++) closed[i].show();
+
+
   c.beginPath();
   c.moveTo(0, 0);
   c.lineTo(cols*inc, 0);
@@ -98,3 +124,4 @@ function draw() {
   if (walls.length > 0) requestAnimationFrame(draw);
 }
 draw();
+
