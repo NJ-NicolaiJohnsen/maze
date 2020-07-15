@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+      
+             
+      
+          <div class="mainContent">
+              <h1 class="bigTitle">Kruskal Algorithm Maze Generation</h1>
+       
+              <div class="separator"></div>
+              <br>
+              <noscript>
+               JavaScript must be enabled to use this applet.  <a href="https://www.enable-javascript.com/" target="_blank">
+               Click here</a> for more information.
+              </noscript>
+          
+              <div class="twoCol_6633">
+                  <div>
+                      <fieldset >
+                       <legend class="controlLegend">The Maze</legend>
+                           <div id="mazecanvas" style="margin-left: auto; margin-right:auto; margin-top:20px; margin-bottom:20px; width:80%;"></div>
+                       </fieldset>
+                  </div>
+                   <div id="controlsDiv">
+                        <fieldset>
+                       <legend class="controlLegend">Options</legend>
+                           Size: <input type="number" id="gridn" value = 16 onchange="newmaze();"><br><br>
+                           Speed: <button onclick="frameRate(1);">Slow</button>
+                           <button onclick="frameRate(5);">Medium</button>
+                           <button onclick="frameRate(60);">Fast</button><br><br>
+                           <button onclick="frameRate(0); draw();">One Step</button><button onclick="instant();">Instant Maze</button><br><br>
+                           <button onclick="frameRate(5); newmaze();">New Maze</button><br><br>
+                           <button onclick="saveMaze();">Save Maze Image (png)</button><br><br>
+                           <span id="message"></span>
+                       </fieldset>
+                       
+                        
+                   </div>
+               </div>
+                
+           
+           <br><br>
+            <div class='info'>
+                
+              <h2>The Randomized Kruskal Algorithm</h2>
+              
+              This algorithm creates a new maze from a grid of cells. To begin, each cell belongs to its own set. Then:
+              <ol>
+                  <li>Choose a random wall (vertical or horizontal) between two cells.</li>
+                      <ol>
+                          <li>If the cells on each side of that wall are already in the same set, do nothing.</li>
+                          <li>If the cells on each side of the wall are not in the same set:</li>
+                              <ol>
+                                  <li> demolish the wall, and</li>
+                                  <li> merge the sets containing those two cells.</li>
+                              </ol>
+                      </ol>
+                  <li>Continue choosing random walls until all cells are in the same set.</li>
+              </ol>
+              This algorithm tends to produce mazes with many short paths, which are therefore easier to solve than mazes generated with other techniques. The mazes are fully connected, meaning you can travel from any cell to any other cell.
+      
+              <br><br>
+      
+              <h2>About the Applet</h2>
+              This applet was created using JavaScript and the P5 library. No other libraries/dependencies are required. If you are having trouble viewing the applet, be sure JavaScript is enabled in your browser. <a href="http://www.enable-javascript.com" target="_blank">Click here</a> for instructions. Internet Explorer is not recommended for this applet.<br><br>
+              This applet was last updated July 2019.
+           </div>	
+
+
+
+    <script>
+
+var w = document.getElementById('mazecanvas').offsetWidth;
+var h = w;
+
+
+
+var msize, csize;	// size of grid, size of cell (px)
+	 	
+var cells = {};
+var walls = {};
+var backup;
+
+var rwall, cwtag;
+var nwalls;
+var potentialWalls = [];
+
+var canvas;	
+
+function newmaze() {
+	document.getElementById('message').innerHTML = "";
+	msize = document.getElementById('gridn').value;
+	csize = w/msize;	// size of each cell
+	cells = {};
+	walls = {};
+	potentialWalls = [];
+
+	// build cell objects 
+	for (var r = 0; r < msize; r++) {
+		for (var c = 0; c < msize; c++) {
+
+			var ct = ""+(r*msize+c);
+			
+			cells[ct] = { row: r, col: c, visited: false, setindex: Number(ct) } 
+			
+			// wall above: 
+			if (r > 0) { 
+				nwalls++;
+				var ntag = (r-1)*msize + c;
+				walltag = ntag+','+(r*msize+c);
+				potentialWalls.push(walltag);
+				walls[walltag] = [ true, 'h'];
+			}
+			if (c > 0) { 
+				nwalls++;
+				var ntag = r*msize + c-1;
+				walltag = ntag+','+(r*msize+c);
+				potentialWalls.push(walltag);
+				walls[walltag] = [ true, 'v'];
+			}
+		}
+	}
+	    rwall =  potentialWalls[ Math.floor( potentialWalls.length * Math.random() ) ];	// random starting wall
+		
+}
+newmaze();
+
+
+
+function setup() {
+  	canvas = createCanvas(w+1,h+1);
+  	canvas.parent('mazecanvas');
+  
+  	unvisited = color('#2F717B');
+  	visited = color('#84C6D0');
+    done = color('white');
+    start = color('#C1E3E8');
+    wcolor = ('#17393E');
+    
+    frameRate(5);
+}
+
+function windowResized() {
+	w = document.getElementById('mazecanvas').offsetWidth;
+    h = w;
+    csize = w/msize;
+    resizeCanvas(w+1,h+1);
+}
+ 
+function instant() {
+	var finish = true;
+
+	for (var r = 0; r < msize; r++) {
+		for (var c = 0; c < msize; c++) {
+			if (cells[''+(r*msize+c)].visited == false ){ finish = false; }
+			}
+	}
+	if (!finish) {
+		next();
+		instant();
+	}
+	draw();
+}
+
+
+function next() {
+
+	var rwn1 = ''+rwall.split(',')[0];	// first neighbor
+	var rwn2 = ''+rwall.split(',')[1];	// second neighbor (to right or below)
+	
+
+	cells[rwn1].visited = true;
+	cells[rwn2].visited = true;
+	
+
+		if ( cells[rwn1].setindex != cells[rwn2].setindex ) {
+ 		// not in same set, remove wall:
+ 		walls[rwall][0] = false;
+ 		potentialWalls.splice(potentialWalls.indexOf(rwall),1);
+ 		
+ 		// add all cells in SECOND set to first set:
+ 		var secondSetIndex = cells[rwn2].setindex;
+ 		var newSetIndex = cells[rwn1].setindex;
+ 		const keys = Object.keys(cells)
+		for (const key of keys) {
+			if (cells[key].setindex == secondSetIndex ) {cells[key].setindex = newSetIndex;}
+		}
+
+		
+		}
+		
+		
+		var pwn = potentialWalls.length;
+
+		for (var i = pwn-1; i >= 0; i--) {
+ 		var rwn1 = ''+potentialWalls[i].split(',')[0];	// first neighbor
+ 		var rwn2 = ''+potentialWalls[i].split(',')[1];	// second neighbor (to right or below)
+ 		if ( cells[rwn1].setindex == cells[rwn2].setindex ) { potentialWalls.splice(i,1); }
+		}
+
+		rwall =  potentialWalls[ Math.floor( potentialWalls.length * Math.random() ) ];
+		
+}
+next();
+
+
+
+function draw() {
+	clear();
+	noStroke();
+		
+	var finish = true;
+
+	for (var r = 0; r < msize; r++) {
+		for (var c = 0; c < msize; c++) {
+			if (cells[''+(r*msize+c)].visited == true ){ fill(done); }
+			else { fill(unvisited); finish = false; }
+				rect(c*csize, r*csize, csize, csize);
+		}
+	}
+	
+	strokeWeight(2);
+		
+	var wkeys = Object.keys(walls);
+	for (var key of wkeys) {
+	  	if (walls[key][0]) {	// wall still there
+		  	var wnbrs = key.split(',');
+		  	var nb1 = wnbrs[0];
+		  	var nb2 = wnbrs[1];
+		  	
+		  	
+		  	if (key == rwall && !finish) {strokeWeight(4);stroke('orange');}
+			  	else {strokeWeight(2);stroke(wcolor);}
+		  	
+			if (walls[key][1] == 'v' ) {	// vertical wall, 'left nbr, right nbr'
+			  	var wrow = Math.floor(nb1/msize);
+			  	var wcol = nb2 - msize*wrow;
+			  	line(wcol*csize, wrow*csize, wcol*csize, wrow*csize + csize);
+		  	}
+		  	if (walls[key][1] == 'h' ) {	// horizontal wall, 'top nbr, bottom nbr'
+			  	var wrow = Math.floor(nb2/msize);
+			  	var wcol = nb2 - msize*wrow;
+			  	line(wcol*csize, wrow*csize, wcol*csize+csize, wrow*csize);
+		  	}
+	  	}
+	}
+	
+	// border:
+	noFill();
+	strokeWeight(2); 
+	stroke(wcolor);
+	rect(1,1,csize*msize-1,csize*msize-1);
+	
+	if (!finish) {
+		next();
+	}
+	else {document.getElementById('message').innerHTML = "Finished"; frameRate(0); }
+					
+}
+
+function saveMaze() {
+	saveCanvas(canvas, 'kruskal_maze', 'png');
+}
+
+
+    </script>
+</body>
+</html>

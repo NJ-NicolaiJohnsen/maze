@@ -8,12 +8,9 @@ body {
     background: whitesmoke
 }
 .column {
-    width: 20px;
-    height: 20px;
-    background: black;
+    
     border-bottom: 1px solid red;
     border-right: 1px solid red;
-    
     float: left;
     box-sizing: border-box;
 }

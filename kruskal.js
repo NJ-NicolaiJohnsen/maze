@@ -77,7 +77,7 @@ function draw() {
       for (let i = 0; i < walls.length; i++) {
         if (walls[index] == undefined || walls[i].weight < walls[index].weight) {
           index = i;
-        
+
         }
       }
 
