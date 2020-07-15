@@ -95,16 +95,16 @@ function drawPotentials(){
 
   
    let inUse = [];
-   
+   let finished = false;
    function func1(){
-       //remember about the weight
-       // let walls = [...potentialWalls];
         let twoCells = potentialWalls[Math.floor(Math.random()*potentialWalls.length)]
         inUse.push(twoCells)
         let coordinates = {}
         let cell1 = inUse[inUse.length-1][0]
         let cell2 = inUse[inUse.length-1][1]
+
      
+
         // use the last item inside the inUse array
         if (cellArray[twoCells[0].index].visited == false || cellArray[twoCells[1].index].visited == false){
          
@@ -112,20 +112,23 @@ function drawPotentials(){
             potentialWalls.splice(removalIndex, 1)
           
             coordinates.x2 = cell2.x,
-            
             coordinates.y2= cell2.y,
             coordinates.x1= cell1.x,
             coordinates.y1= cell1.y
-           console.log(removalIndex)
+            
+           //console.log(removalIndex)
            cellArray[cell1.index].visited = true;
            cellArray[cell2.index].visited = true;
+
+            
         }
-        console.log(cellArray[cell1.index].visited, cellArray[cell2.index].visited)
-      // requestAnimationFrame(func1)
+        
+       // console.log(cellArray[cell1.index].visited, cellArray[cell2.index].visited)
+     
         return coordinates;
 
     }
-    //func1()
+
 
     function draw(){
         let coord = func1()
@@ -149,8 +152,21 @@ function drawPotentials(){
             rows[y2][x2].style.backgroundColor = null
 
         }
-        
-       
+
+        /*
+        if (inUse.length > cols*yRows){
+            finished = true;
+            for (let i = 0; i < 5; i++){
+                let randY = Math.floor(Math.random()*yRows);
+                let randX = Math.floor(Math.random()*cols);
+                rows[randY][randX].style.borderRight = 0;
+            }
+        }
+
+        console.log(finished)
+*/
+
+        //console.log(rows[0])
         requestAnimationFrame(draw)
         
     }
