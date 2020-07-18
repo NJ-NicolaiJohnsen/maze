@@ -1,12 +1,13 @@
 
 let maze = document.getElementById('maze');
 const height = 900;
-const width = 1500;
+const width = 900;
 const cube = 50 // cell size = 20px by 20px. Hence cube
 const yRows = height/cube;
 const cols = width/cube; 
 maze.style.width = width + 'px';
 maze.style.height = height + 'px';   
+let count = 0;
 
 class Cell {
     constructor(y, x) {
@@ -14,288 +15,177 @@ class Cell {
         this.y = y
         this.index = this.y*cols + this.x;
         this.visited = false;
-        this.weight = Math.random();
+        this.connectsToCoordinate = []
     }
 
-    borderControl(){
-        this.borders = {}
-        if (this.borderToTheRight) {
-            this.borders.borderRight = 1;
-            this.borders.borderBottom = 1;
-        } else {
-            this.borders.borderRight = 0;
-            this.borders.borderBottom = 1;
-        }
-        return this.borders;
+    makeCellDivs(){
+        // Creates the cell-div-elements and returns the element WITHOUT appending it to the DOM
+        this.cellDiv = document.createElement('DIV');
+        this.cellDiv.className = 'column';
+        this.cellDiv.style.width = cube+'px';
+        this.cellDiv.style.height = cube+'px';
+        this.cellDiv.style.backgroundColor = 'black'
+        this.cellDiv.style.borderLeft = '1px solid red';
+        this.cellDiv.style.borderTop = '1px solid red'
+        return this.cellDiv
     }
 }
 
+class ConnectedCells {
+    constructor(y1, x1, y2, x2) {
+        this.y1 = y1;
+        this.x1 = x1;
+        this.y2 = y2;
+        this.x2 = x2;
+        this.wallIsLeft = null;
+        this.wallIsAbove = null;
+        this.index1 = this.y1*cols + this.x1;
+        this.index2 = this.y2*cols + this.x2;
+        this.visited = false;
+        this.weight = Math.random();
+    }
 
-let cells = []; // these are the grid-items, nesten arrays
+    removeBorder(){
+       
+        // if Cell-coordinate-2 is above Cell-coordinate-1, then remove the border below Cell-2
+        if (this.x1 == this.x2) {
+            cells[this.y2][this.x2].cellDiv.style.borderTop = 0;
+            this.wallIsAbove = false;
+        } else {
+            cells[this.y2][this.x2].cellDiv.style.borderLeft = 0;
+            this.wallIsLeft = false;
+        }
+        // change the color of both cell-1 and cell-2 to white
+        cells[this.y1][this.x1].cellDiv.style.backgroundColor = null;
+        cells[this.y2][this.x2].cellDiv.style.backgroundColor = null;
+    }
+}
+// a tree is a collection of cells making a path.
+// The trees here get a weight. Three things can happen when two trees are connected.
+// 1. The trees have the same weight, meaning they are already connected, and there do nothing.
+// 2. Tree1 has a lower weight than Tree2, and Tree1 absorbs Tree2
+// 3. Tree1 has a higher weight than Tree2, and Tree2 then absorbs Tree1.
+// When there is only one weight left, stop the function
+class Tree {
+    constructor(weight) {
+        this.weight = weight
+        this.path = [];
+    }
+}
+
+// cells will be referred to when removing borders inside the maze.
+let cells = []; // these are the grid-items, nested arrays
 for (let y = 0; y< yRows; y++) {
-    cells[y] = []
-    for (let x = 0; x < cols; x++){
+    cells[y] = document.createElement('DIV');
+    maze.appendChild(cells[y])
+    for (let x = 0; x < cols; x++){    
         cells[y][x] = new Cell(y, x)
+        cells[y][x].makeCellDivs();
+        cells[y].appendChild(cells[y][x].makeCellDivs())
     }
 }
 
 let potentialWalls = [];
-
-for (let y = 1; y < yRows; y++) {
-    for (let x = 0; x< cols; x++) {
-
-        potentialWalls.push([cells[y][x], cells[y-1][x]])
-    }
-}
-
 for (let y = 0; y < yRows; y++) {
-    for (let x = 1; x < cols; x++) {
-        potentialWalls.push([cells[y][x], cells[y][x-1]])
+    for (let x = 0; x < cols; x++) {
+        if (y < yRows-1){
+            potentialWalls.push(new ConnectedCells(y, x, y+1, x));
+        }
+        if (x < cols-1) {
+            potentialWalls.push(new ConnectedCells(y, x, y, x+1));
+        }
     }
 }
+
 
 
 
 function drawPotentials(){
-    
-    let rows = [];
-    for (let y = 0; y < cells.length; y++) {
-        rows[y] = document.createElement('DIV');
-        maze.appendChild(rows[y]);
-        for (let x = 0; x<cells[y].length; x++) {
-            rows[y][x] = document.createElement('DIV');
-            rows[y][x].className = 'column';
-            rows[y][x].style.width = cube+'px';
-            rows[y][x].style.height = cube+'px';
-            rows[y][x].style.backgroundColor = 'black'
-            rows[y].appendChild(rows[y][x])
-        }
-    }
 
-    let rowArray = []
-    for (let i=0; i<yRows; i++){
-        for (let j = 0; j< cols; j++){
-            rowArray.push(rows[i][j])
-        }
-    }
-
+    // A single array containing all the cells. The index-property of the potentialWalls will be used.
     let cellArray = [];
-    for (let y = 0; y<cells.length; y++){
-        for (let x = 0; x< cells[y].length; x++){
-            
-            cellArray.push(cells[y][x])
+    for (let i =0; i< yRows; i++){
+        for (let j = 0; j< cols; j++){
+            cellArray.push(cells[i][j])
         }
     }
+   
 
-    function checkColor(cell) {
-        return cell.style.backgroundColor !== null;
-    }
+    let trees = [];
 
-   // console.log(rowArray.every(checkColor))
-
-  
-   let inUse = [];
-   let finished = false;
-   function func1(){
+   function getCoordinates(){
         let twoCells = potentialWalls[Math.floor(Math.random()*potentialWalls.length)]
-        inUse.push(twoCells)
-        let coordinates = {}
-        let cell1 = inUse[inUse.length-1][0]
-        let cell2 = inUse[inUse.length-1][1]
-
-     
-
+        let removalIndex = potentialWalls.indexOf(twoCells) 
+        potentialWalls.splice(removalIndex, 1)
         // use the last item inside the inUse array
-        if (cellArray[twoCells[0].index].visited == false || cellArray[twoCells[1].index].visited == false){
-         
-            let removalIndex = potentialWalls.indexOf(twoCells)
-            potentialWalls.splice(removalIndex, 1)
-          
-            coordinates.x2 = cell2.x,
-            coordinates.y2= cell2.y,
-            coordinates.x1= cell1.x,
-            coordinates.y1= cell1.y
-            
-           //console.log(removalIndex)
-           cellArray[cell1.index].visited = true;
-           cellArray[cell2.index].visited = true;
-
-            
-        }
+      //  if (cellArray[twoCells.index1].visited == false || cellArray[twoCells.index2].visited == false) {
         
-       // console.log(cellArray[cell1.index].visited, cellArray[cell2.index].visited)
-     
-        return coordinates;
-
-    }
-
-
-    function draw(){
-        let coord = func1()
-        let x1 = coord.x1;
-        let y1 = coord.y1;
-        let x2 = coord.x2;
-        let y2 = coord.y2;
-        //console.log(y1)
-        if (x1 == x2) {
-            if (rows[y2]){
-
-                rows[y2][x2].style.borderBottom = 0;
-            }
-            
+        // check the paths within all the trees for coordinates that are equal to the current one - twoCells === current one
+        if (trees.length < 1) {
+           // console.log(trees)
+           twoCells.removeBorder()
+            let tree = new Tree(twoCells.weight)
+            tree.path.push(twoCells);
+            trees.push(tree)
         } else {
-            rows[y2][x2].style.borderRight = 0;
-        }
-
-        if (rows[y1]){
-            rows[y1][x1].style.backgroundColor = null;
-            rows[y2][x2].style.backgroundColor = null
-
-        }
-
-        /*
-        if (inUse.length > cols*yRows){
-            finished = true;
-            for (let i = 0; i < 5; i++){
-                let randY = Math.floor(Math.random()*yRows);
-                let randX = Math.floor(Math.random()*cols);
-                rows[randY][randX].style.borderRight = 0;
+            twoCells.removeBorder()
+            for (let i = 0; i < trees.length; i++){
+                for (let j = 0; j < trees[i].path.length; j++) {
+                    if (twoCells.y2 == trees[i].path[j].y2 && twoCells.x2 == trees[i].path[j].x2)   {   
+                        if (twoCells.weight != trees[i].weight){
+                            if (twoCells.weight < trees[i].weight) {
+                               
+                                trees[i].weight = twoCells.weight;
+                                trees[i].path.push(twoCells)
+                              //  break;
+                            } else {
+                               
+                                trees[i].path.push(twoCells)
+                              //  break;                  
+                            }
+                        }
+                    } else {
+                       
+                        let tree = new Tree(twoCells.weight)
+                        tree.path.push(twoCells);
+                        trees.push(tree)
+                       // break;
+                    }
+                    
+                }
             }
-        }
-
-        console.log(finished)
-*/
-
-        //console.log(rows[0])
-        requestAnimationFrame(draw)
-        
+        }    
+            
+           
+          
+          //  console.log(trees)
+      //  }
+       
+       // requestAnimationFrame(getCoordinates)
     }
+    getCoordinates()
+    getCoordinates()
+    getCoordinates()
+ //   getCoordinates()
+  //  getCoordinates()
+    //getCoordinates()
 
-   draw()
+    
   
-   
-   
+    trees.forEach(tree=>{
+        console.log(tree)
+        tree.path.forEach(obj=>{
+            console.log(obj)
+        })
+    })
+ 
 
-   // console.log(inUse[inUse.length-1][0].index )
+    
 }
 drawPotentials()
 
-
-
-
-
-
-
-
-function draw() {
-    maze.innerHTML = null;
-    let rows = [];
-    for (let y = 0; y < cells.length; y++) {
-        rows[y] = document.createElement('DIV');
-        maze.appendChild(rows[y]);
-        for (let x = 0; x<cells[y].length; x++) {
-            rows[y][x] = document.createElement('DIV');
-            rows[y][x].className = 'column';
-            rows[y][x].style.width = cube+'px';
-            rows[y][x].style.height = cube+'px';
-            rows[y][x].style.backgroundColor = 'black'
-            rows[y].appendChild(rows[y][x])
-        }
-    }
-    
-    function getRandomArbitrary(min, max) {
-        return Math.floor(Math.random() * (max - min) + min);
-    }
- 
-    // One long array containing all the cell objects
-    let cellArray = [];
-    for (let y = 0; y<cells.length; y++){
-        for (let x = 0; x< cells[y].length; x++){
-            
-            cellArray.push(cells[y][x])
-        }
-    }
-    let inUse = [];
-
-
-    function func4(){
-        
-        let randIndex2
-        let randIndex1 = getRandomArbitrary(0, cellArray.length);
-        if (Math.random()*2>1){
-            randIndex2 = randIndex1 - 1;
-        } else {
-            randIndex2 = randIndex1 - cols;
-        }
-        
-        let index;
-        if (cellArray[randIndex2] == undefined || cellArray[randIndex1].weight > cellArray[randIndex2].weight) {
-            index = randIndex1;
-        } else {
-            index = randIndex2;
-        }
-        
-        
-        /*
-        let index;
-        for (let i = 0; i< cellArray.length; i++) {
-            if (cellArray[index] == undefined || cellArray[i].weight > cellArray[index].weight) {
-                index=i
-                
-            } 
-        }
-        
-        */
-
-        let x1 = cellArray[index].x
-        let y1 = cellArray[index].y
-        
-        let x2;
-        let y2;
-        let borderToRight = Math.random()*2>1;
-        
-        if (borderToRight) {
-            if (cells[y1][x1+1] == undefined || cells[y1][x1-1] == undefined || cells[y1][x1+1].weight < cells[y1][x1-1].weight){
-                x2 = x1+1;
-                y2 = y1;
-            } else {
-                x2 = x1-1;
-                y2 = y1;
-            }
-          
-            if (rows[y2] && rows[y2][x2] != undefined){
-                rows[y2][x2].style.borderRight = '0px';
-                
-                rows[y1][x1].style.backgroundColor = null;
-                rows[y2][x2].style.backgroundColor = null;
-                inUse.push(cellArray.splice(index, 1))
-            } 
-        } else {
-            if (cells[y1-1] == undefined || cells[y1+1] == undefined || cells[y1+1][x1].weight < cells[y1-1][x1].weight){
-                x2 = x1;
-                y2 = y1+1
-            } else {
-                x2 = x1;
-                y2 = y1-1
-            }
-            
-            if (rows[y2] && rows[y2][x2] != undefined){
-                
-                rows[y2][x2].style.borderBottom = '0px'
-                rows[y1][x1].style.backgroundColor = null;
-                rows[y2][x2].style.backgroundColor = null;
-                inUse.push(cellArray.splice(index, 1))
-            } 
-        }
-
-        requestAnimationFrame(func4)
-    }
-
-    
-    func4()
-    
-}
-//draw();
-
-
+// now we have an array of arrays containing cells w/ info abt the presence of walls in the cells.
+// todo: group cells into their respective trees. how tho...
+// solution: attach info about which coordinate the cell connects to into the cell
+// then use magic to discover the chains of cells
 

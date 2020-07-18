@@ -9,8 +9,7 @@ body {
 }
 .column {
     
-    border-bottom: 1px solid red;
-    border-right: 1px solid red;
+    
     float: left;
     box-sizing: border-box;
 }
