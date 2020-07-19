@@ -15,7 +15,7 @@ class Cell {
         this.y = y
         this.index = this.y*cols + this.x;
         this.visited = false;
-        this.connectsToCoordinate = []
+        this.connectsToCoordinate = [] // its gonna connect to 8 different cells.
     }
 
     makeCellDivs(){
@@ -24,9 +24,11 @@ class Cell {
         this.cellDiv.className = 'column';
         this.cellDiv.style.width = cube+'px';
         this.cellDiv.style.height = cube+'px';
+        
         this.cellDiv.style.backgroundColor = 'black'
         this.cellDiv.style.borderLeft = '1px solid red';
         this.cellDiv.style.borderTop = '1px solid red'
+        
         return this.cellDiv
     }
 }
@@ -39,6 +41,7 @@ class ConnectedCells {
         this.x2 = x2;
         this.wallIsLeft = null;
         this.wallIsAbove = null;
+        
         this.index1 = this.y1*cols + this.x1;
         this.index2 = this.y2*cols + this.x2;
         this.visited = false;
@@ -60,6 +63,7 @@ class ConnectedCells {
         cells[this.y2][this.x2].cellDiv.style.backgroundColor = null;
     }
 }
+
 // a tree is a collection of cells making a path.
 // The trees here get a weight. Three things can happen when two trees are connected.
 // 1. The trees have the same weight, meaning they are already connected, and there do nothing.
@@ -189,3 +193,31 @@ drawPotentials()
 // solution: attach info about which coordinate the cell connects to into the cell
 // then use magic to discover the chains of cells
 
+/*
+Maze KruskalS(int width, int height)
+{
+  Maze maze(width, height);
+
+  // Create a set with all connecting edges
+  // Create a vector of buckets for each cell with their id.
+  Set edges(maze);                  // #edges = (height - 1) * width + (width - 1) * height
+  BucketsVector bucketCells(maze);  // #buckets = #cells = height * width
+
+  // While the set of edges is not empty
+  while (!edges.empty())
+  {
+    // Randomly get an edge and remove it from the set
+    auto edge = GetRandom(edges);
+
+    // If cells are not already in the same bucket: Connect them and Merge Buckets
+    if (BucketId(edge.first) != BucketId(edge.second))
+    {
+      Connect(edge.first, edge.second);
+      MergeBuckets(bucketCells, edge);
+    }
+  }
+
+  return maze;
+} 
+
+*/
