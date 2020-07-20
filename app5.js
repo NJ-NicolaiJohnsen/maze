@@ -7,8 +7,8 @@
 // If the chosen edge contains a cell equal to a tree, then check if 
 
 let maze = document.getElementById('maze');
-const height = 250;
-const width = 250;
+const height = 900;
+const width = 1500;
 const cube = 50 // cell size = 20px by 20px. Hence cube
 const rows = height/cube;
 const cols = width/cube; 
@@ -21,6 +21,7 @@ class Cell {
         this.y = y;
         this.x = x;
         this.index = this.y*cols + this.x
+        this.weight = Math.random()
     }
 
     makeCellDivs(){
@@ -40,7 +41,13 @@ class Edge {
         this.cell1 = cell1;
         this.cell2 = cell2
         this.direction = direction
-        this.weight = Math.random();
+        this.weight;
+        if (this.cell1.weight < this.cell2.weight){
+            this.weight = this.cell1.weight;
+        } else {
+            this.weight = this.cell2.weight
+        }
+
     }
 
     removeEdge(){
@@ -56,8 +63,9 @@ class Edge {
 }
 
 class Tree {
-    constructor(cell1, cell2){
-        this.cells = [cell1, cell2];
+    constructor(){
+        this.cells = [];
+        this.weight;
     }
 }
 
@@ -95,43 +103,187 @@ function chooseEdgeToRemove(){
     return edge;
 }
 
+let usedEdges = []
+function setWeight(){
+    let edge = chooseEdgeToRemove()
+    let doNothing = null;
+    let analyseWeight = false;
+    let removeEdge = false;
+    let collisionIndex;
+    if (usedEdges.length == 0) {
+        removeEdge = true;
+    } else {
+        usedEdges.forEach(usedEdge=>{
+            
+            if (usedEdge.cell1 != edge.cell1 && usedEdge.cell2 != edge.cell2) {
+                removeEdge = true; // The new edge doesnt collide with an existing edge
+            } else if (usedEdge.cell2 != edge.cell1 && usedEdge.cell1 != edge.cell2){
+                removeEdge = true; // The new edge doesnt collide with an existing edge
+
+                // UNDER HERE --- the new edge collides with an existing edge.
+            } else if (usedEdge.cell2 == edge.cell2 && usedEdge.cell1 != edge.cell1) {
+                analyseWeight = true
+                collisionIndex = usedEdges.indexOf(usedEdge)
+              
+            } else if (usedEdge.cell1 == edge.cell2 && usedEdge.cell2 != edge.cell1) {
+                analyseWeight = true;
+                collisionIndex = usedEdges.indexOf(usedEdge)
+                
+            } else if (usedEdge.cell2 == edge.cell1 && usedEdge.cell1 != edge.cell2) {
+                analyseWeight = true;
+                collisionIndex = usedEdges.indexOf(usedEdge)
+               
+            } else if (usedEdge.cell1 == edge.cell1 && usedEdge.cell2 != edge.cell2) {
+                analyseWeight = true;
+                collisionIndex = usedEdges.indexOf(usedEdge)
+               
+            } else {
+                return doNothing;
+            }
+        })
+    }
+    
+    if (analyseWeight == true) {
+
+        if (edge.weight < usedEdges[collisionIndex].weight) {
+            usedEdges.forEach(usedEdge=>{
+                // see if there are any other usedEdges with the same weight as the collisionIndex
+                // that is effectively a tree
+                if (usedEdge.weight == usedEdges[collisionIndex].weight) {
+                    usedEdge.weight = edge.weight
+                    console.log(usedEdge.weight)
+                    // check for tree collision
+                } else if (edge.cell1.weight ==  usedEdge.cell1.weight && 
+                  edge.cell2.weight == usedEdge.cell2.weight) {
+                    console.log(edge.cell1.weight)
+                }
+            })
+            removeEdge = true;
+        } else if (edge.weight > usedEdges[collisionIndex].weight) {
+            edge.weight = usedEdges[collisionIndex].weight;
+            removeEdge = true;
+        } else { // if both edges are equal in weight
+            removeEdge = false;
+        }
+    }
+    console.log(edge.weight)
+    if (removeEdge == true) {
+        edge.removeEdge()
+        usedEdges.push(edge)
+        //console.log(edge)
+    }
+
+  
+
+}
+
+
+
+
+let usedWeights = [];
+function compareWeights() {
+    setWeight()
+   // console.log(usedEdges)
+    usedWeights.push(usedEdges[usedEdges.length-1].weight)
+    const areAllWeightsEqual = arr => arr.every(value => value == arr[0]) // returns a boolean value
+    
+
+  //  console.log(areAllWeightsEqual(usedWeights))
+  //  console.log(usedEdges)
+/*
+    if (usedWeights.length == 0) {
+        setWeight()
+    } else {   
+        while (areAllWeightsEqual(usedWeights) == false){
+            setWeight()
+        }
+    }
+*/
+
+
+    
+}
+
+
+
+for (let i = 0; i < 6; i++) {
+    compareWeights()
+}
+
+
+
+
+
+
+
+
+
+
 let trees = [];
 
 function makeTree(){
     let edge = chooseEdgeToRemove()
-    edge.removeEdge()
     
+    let makeNewTree = null;
+    let treeIndex;
     if (trees.length == 0) {
-        let newTree = new Tree(edge.cell1, edge.cell2)
-        trees.push(newTree)
+        makeNewTree = true;
     } else {
         // check for cell connection and tree connection to existing trees
         trees.forEach(tree=>{
             tree.cells.forEach(cell=>{
                 if (cell == edge.cell1 && cell != edge.cell2) {
-                    tree.cells.push(edge.cell1)
+                    treeIndex = trees.indexOf(tree);
+                    makeNewTree = false;
                 } 
                 else if (cell == edge.cell2 && cell != edge.cell1) {
-                    tree.cells.push(edge.cell2)
-                }
+                    treeIndex = trees.indexOf(tree);
+                    makeNewTree = false;
+                    
+                } 
                 else {
-                    let newTree = new Tree(edge.cell1, edge.cell2)
-                    trees.push(newTree)
+                    makeNewTree = true;
+                    
                 }
-
-
+                
             })
         })
-        
     }
 
-   
+    if (makeNewTree == true) {
+        let newTree = new Tree()
+        newTree.cells.push(edge.cell1, edge.cell2)
+        newTree.weight = edge.weight
+        trees.push(newTree)
+
+    } else {
+        trees[treeIndex].cells.push(edge.cell1, edge.cell2)
+
+         if (edges.weight < trees[treeIndex].weight) {
+            trees[treeIndex].weight = edges.weight
+        }
+    }
+    
+    return edge;
     //requestAnimationFrame(makeTree)
 }
 
-makeTree()
-makeTree()
-makeTree()
+function detectTreeCollision(){
+    let edge = makeTree();
+
+    trees.forEach(tree=>{
+        tree.cells.forEach(cell=>{
+            let index = tree.cells.indexOf(cell);
+            
+        })
+    })
+
+    edge.removeEdge()
+    //requestAnimationFrame(detectTreeCollision)
+}
+
+//detectTreeCollision()
 
 
-console.log(trees)
+
+
